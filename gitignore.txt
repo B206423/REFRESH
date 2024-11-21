@@ -1,0 +1,9 @@
+*.pyc
+.DS_Store
+.env
+.venv
+__pycache__
+venv
+idea
+data
+backup
