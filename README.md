@@ -42,6 +42,9 @@ allowing for efficient comparison and retrieval of relevant information.
 
 **How it Works:**
 
+
+![NV_RAG_Approach](https://github.com/user-attachments/assets/84457814-f29d-4543-8408-2b3d8229a7cc)
+
 1. **User Input:** Users provide the URL of a website they want to explore through the
     Streamlit interface.
 2. **Website Exploration:** The application utilizes Beautiful Soup to parse the website's
