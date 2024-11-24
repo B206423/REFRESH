@@ -3,8 +3,30 @@
 
 # Resume AI Coach
 
+## Feature Set: 
 
-### Quick setup 
+### 1. Validate Resume/CV
+-
+
+### 2. Compare the resume with Job Description
+-
+
+### 3. Recommendations 
+- Recomment changes to Resume based on similar Job Descriptions (JD) from JD history corpus
+
+### 4. Chat with Coach 
+-
+
+### 5. MLOPS
+-
+-
+-
+
+### Git Quick setup 
+
+```bash
+  https://github.com/B206423/REFRESH.git
+```
 	
 - Get started by creating a new file or uploading an existing file. 
 - We recommend every repository include a README, LICENSE, and .gitignore.
