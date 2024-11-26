@@ -3,6 +3,13 @@
 
 # Resume AI Coach
 
+## Technolgy Stack 
+- Web: Streamlit 
+- Vector DB: Chroma DB
+- Embedding : OpenAI
+- LLM : OpenAI 4o Model
+- 
+
 ## Feature Set: 
 
 ### 1. Validate Resume/CV
@@ -21,6 +28,9 @@
 -
 -
 -
+
+
+
 
 ### Git Quick setup 
 
