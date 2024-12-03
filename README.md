@@ -1,25 +1,20 @@
-# REFRESH 
-### Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
-
 # Resume AI Coach
 
-## Technolgy Stack 
-- Web: Streamlit 
-- Vector DB: Chroma DB
-- Embedding : OpenAI
-- LLM : OpenAI 4o Model
-- 
+Project Name: **REFRESH**
 
-## Feature Set: 
+Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
-### 1. Validate Resume/CV
+
+## Feature Set 
+
+### 1. Review Resume/CV
 -
 
-### 2. Compare the resume with Job Description
+### 2. Check Resume's compatibility with Job Description
 -
 
-### 3. Recommendations 
-- Recomment changes to Resume based on similar Job Descriptions (JD) from JD history corpus
+### 3. General Recommendations 
+- Recommend changes to Resume based on similar Job Descriptions (JD) from JD history corpus
 
 ### 4. Chat with Coach 
 -
@@ -29,7 +24,59 @@
 -
 -
 
+## Technolgy Stack 
+- Web: Streamlit 
+- Vector DB: Chroma DB
+- Embedding : OpenAI
+- LLM : OpenAI 4o Model
+- 
 
+## Setup
+### Prerequisites
+
+- Python 3.10 or 3.11
+- Poetry (Follow this [Poetry installation tutorial](https://python-poetry.org/docs/#installation) to install Poetry on your system)
+
+### Installation
+
+1. Install dependencies using Poetry:
+
+   ```bash
+   poetry install --no-root
+   ```
+
+2. Set up your environment variables:
+
+   - Rename the `.env.example` file to `.env` and update the variables inside with your own values. Example:
+
+   ```bash
+   mv examples/.env.example .env
+   ```
+
+3. Activate the Poetry shell to run the examples:
+
+   ```bash
+   poetry shell
+   ```
+
+4. Run the code examples:
+
+   ```bash
+    python resume_coach_main.py
+   ```
+
+## Release notes
+
+### v0.1
+
+- Store any example resume in 'resume.txt' and store any example job description in 'job_description.txt'
+or use the examples provided as follows
+
+   ```bash
+   mv examples/job_description.txt.example job_description.txt
+   mv examples/resume.txt.example resume.txt
+   ```
+- Run resume_coach_main.py
 
 
 ### Git Quick setup 
