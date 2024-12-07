@@ -67,6 +67,10 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
 ## Release notes
 
+### v0.2
+
+  Support for both resume report and job compatibility report
+
 ### v0.1
 
 - Store any example resume in 'resume.txt' and store any example job description in 'job_description.txt'
