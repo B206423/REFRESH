@@ -67,6 +67,11 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
 ## Release notes
 
+### v0.3
+
+  Run inside a Docker container
+  Add Basic web UI to display the result
+
 ### v0.2
 
   Support for both resume report and job compatibility report
