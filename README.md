@@ -39,6 +39,7 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
 ### Installation
 
+#### CLI
 1. Install dependencies using Poetry:
 
    ```bash
@@ -64,6 +65,30 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
    ```bash
     python resume_coach_main.py
    ```
+
+#### Using Docker
+1. Set up your environment variables:
+
+   - Rename the `.env.example` file to `.env` and update the variables inside with your own values. Example:
+
+   ```bash
+   mv examples/.env.example .env
+   ```
+
+2. Build Docker image
+
+   ```bash
+   docker build -t refresh .
+   ```
+
+3. Run the Docker container
+
+   ```bash
+   docker run -p 9000:9000 -e PORT=9000 --rm -it capstone
+   ```
+
+4. Launch browser and go to http://localhost:9000/
+
 
 ## Release notes
 
