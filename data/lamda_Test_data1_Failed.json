@@ -1,0 +1,11 @@
+{
+    "inputs": [
+            {"role": "system", "content": "You are an expert in copywriting"},
+            {"role": "user", "content": "Write me a tweet about superconductors"}, 
+    ],
+    "parameters": {
+        "max_new_tokens": 1000,
+        "top_p": 0.9,
+        "temperature": 0.6
+    }
+}

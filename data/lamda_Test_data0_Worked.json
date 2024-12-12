@@ -1,0 +1,8 @@
+{
+    "inputs": "A brief message congratulating the team on the launch:\n\nHi everyone,\n\nI just ",
+    "parameters": {
+        "max_new_tokens": 64,
+        "top_p": 0.9,
+        "temperature": 0.6
+    }
+}
