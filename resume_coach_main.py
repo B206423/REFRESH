@@ -129,14 +129,8 @@ def main_method(from_browser = False):
     jd_rpt = jd_compatibility_report(session_id, jd_file_content)
     #jobs_reports = q_and_a(session_id, rec_prompt, chat_history)
 
-    response = {
-        'resume_report': resume_rpt,
-        'jd_report': jd_rpt
-    }
-
-    # Process the query through the retrieval chain
-    print(f"Result")
-    print(jsonify(response))
+    print(f"Resume Report\n{resume_rpt[0]}")
+    print(f"Job Compatibility Report\n{jd_rpt[0]}")
 
 
 def resume_report(session_id, resume):

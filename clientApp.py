@@ -41,6 +41,7 @@ def upload_files():
     jd_file_content = jd_file.read().decode('utf-8')
     session_id = str(uuid.uuid4())
 
+    # TODO: store the file contents into a DB
     response = {
         'resume_file_content': resume_file_content,
         'jd_file_content': jd_file_content,
