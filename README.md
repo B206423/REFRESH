@@ -92,6 +92,14 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
 ## Release notes
 
+### v1.0
+  Working UI
+  - Upload Resume, Job description
+  - Preview Resume, Job Description
+  - "Get Report" button to 
+    - generate and display a Resume report
+    - generate and display Job Compatibility report
+
 ### v0.3
 
   Run inside a Docker container

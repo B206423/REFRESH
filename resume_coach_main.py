@@ -7,6 +7,8 @@ from langchain_chroma import Chroma
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from flask import jsonify
+import uuid
 
 # Load environment variables from .env
 load_dotenv()
@@ -29,79 +31,79 @@ retriever = db.as_retriever(
     search_kwargs={"k": 3},
 )
 
-# alternate models
+# TODO: support alternate models
 #inference: llama-3.2, text embedding: nomic-embed-text
 
 # Create a ChatOpenAI model
 llm = ChatOpenAI(model="gpt-4o-mini")
 
+# From https://python.langchain.com/v0.1/docs/use_cases/question_answering/chat_history/#contextualizing-the-question
+# Contextualize question prompt
+# This system prompt helps the AI understand that it should reformulate the question
+# based on the chat history to make it a standalone question
+contextualize_q_system_prompt = (
+    "Given a chat history and the latest user question "
+    "which might reference context in the chat history, "
+    "formulate a standalone question which can be understood "
+    "without the chat history. Do NOT answer the question, just "
+    "reformulate it if needed and otherwise return it as is."
+)
 
-def create_rag_chain(resume, job_description):
-  # From https://python.langchain.com/v0.1/docs/use_cases/question_answering/chat_history/#contextualizing-the-question
-  # Contextualize question prompt
-  # This system prompt helps the AI understand that it should reformulate the question
-  # based on the chat history to make it a standalone question
-  contextualize_q_system_prompt = (
-      "Given a chat history and the latest user question "
-      "which might reference context in the chat history, "
-      "formulate a standalone question which can be understood "
-      "without the chat history. Do NOT answer the question, just "
-      "reformulate it if needed and otherwise return it as is."
-  )
+# Create a prompt template for contextualizing questions
+contextualize_q_prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", contextualize_q_system_prompt),
+        MessagesPlaceholder("chat_history"),
+        ("human", "{input}"),
+    ]
+)
 
-  # Create a prompt template for contextualizing questions
-  contextualize_q_prompt = ChatPromptTemplate.from_messages(
-      [
-          ("system", contextualize_q_system_prompt),
-          MessagesPlaceholder("chat_history"),
-          ("human", "{input}"),
-      ]
-  )
+# Create a history-aware retriever
+# This uses the LLM to help reformulate the question based on chat history
+history_aware_retriever = create_history_aware_retriever(
+    llm, retriever, contextualize_q_prompt
+)
 
-  # Create a history-aware retriever
-  # This uses the LLM to help reformulate the question based on chat history
-  history_aware_retriever = create_history_aware_retriever(
-      llm, retriever, contextualize_q_prompt
-  )
+# Answer question prompt
+# This system prompt helps the AI understand that it should provide concise answers
+# based on the retrieved context and indicates what to do if the answer is unknown
+qa_system_prompt = (
+    "You are an assistant for reviewing the resume and providing guidance."
+    "The context is the resume and job description which will be provided in the following prompt"
+    "Use the context to answer the question. "
+    "If you don't know the answer, just say that you "
+    "don't know. Use ten sentences maximum and keep the answer "
+    "concise."
+    "{context}"
+)
 
-  # Answer question prompt
-  # This system prompt helps the AI understand that it should provide concise answers
-  # based on the retrieved context and indicates what to do if the answer is unknown
-  qa_system_prompt = (
-      "You are an assistant for reviewing the resume and providing guidance."
-      "The context is the resume and job description provided below"
-      " Use the context to answer the question. "
-      "If you don't know the answer, just say that you "
-      "don't know. Use ten sentences maximum and keep the answer "
-      "concise."
-      "Resume:\n" +
-      resume +
-      "Job Description: \n" +
-      job_description +
-      "\n\n"
-      "{context}"
-  )
+# Create a prompt template for answering questions
+qa_prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", qa_system_prompt),
+        MessagesPlaceholder("chat_history"),
+        ("human", "{input}"),
+    ]
+)
 
+# TODO: move this to DB but keep the interface the same
+chat_histories = {}
+def get_chat_history(session_id):
+   chat_history = chat_histories.get(session_id)
+   if chat_history is None:
+      chat_history = []
+      chat_histories[session_id] = chat_history
+   return chat_history
 
-  # Create a prompt template for answering questions
-  qa_prompt = ChatPromptTemplate.from_messages(
-      [
-          ("system", qa_system_prompt),
-          MessagesPlaceholder("chat_history"),
-          ("human", "{input}"),
-      ]
-  )
+# Create a chain to combine documents for question answering
+# `create_stuff_documents_chain` feeds all retrieved context into the LLM
+question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 
-  # Create a chain to combine documents for question answering
-  # `create_stuff_documents_chain` feeds all retrieved context into the LLM
-  question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
+# Create a retrieval chain that combines the history-aware retriever and the question answering chain
+rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
-  # Create a retrieval chain that combines the history-aware retriever and the question answering chain
-  rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
-  return rag_chain
-
-
-def q_and_a(rag_chain, chat_history, question):
+def q_and_a(session_id, rag_chain, question):
+  chat_history = get_chat_history(session_id)
   result = rag_chain.invoke({"input": question, "chat_history": chat_history})
   chat_history.append(HumanMessage(content=question))
   chat_history.append(SystemMessage(content=result["answer"]))
@@ -113,22 +115,33 @@ def main_method(from_browser = False):
     chat_history = []  # Collect chat history here (a sequence of messages)
 
     user_input = {}
+    session_id = "localhost" + str(uuid.uuid4())
 
-    #TODO: read from user input
+    # read from user input, this is just for example
     with open('resume.txt', 'r') as file:
-      resume = file.read()
+      resume_file_content = file.read()
 
-    #TODO: read from user input
+    # read from user input, this is just for example
     with open('job_description.txt', 'r') as file:
-      job_description = file.read()
+      jd_file_content = file.read()
 
-    result = {}
+    resume_rpt= resume_report(session_id, resume_file_content)
+    jd_rpt = jd_compatibility_report(session_id, jd_file_content)
+    #jobs_reports = q_and_a(session_id, rec_prompt, chat_history)
+
+    response = {
+        'resume_report': resume_rpt,
+        'jd_report': jd_rpt
+    }
+
     # Process the query through the retrieval chain
-    print(f"Step 2. Creating rag chain")
-    rag_chain = create_rag_chain(resume=resume, job_description=job_description)
+    print(f"Result")
+    print(jsonify(response))
 
-    print(f"Step 3. Creating resume report")
-    prompt_resume_report =  ("Please provide feedback on its completeness and effectiveness by:"
+
+def resume_report(session_id, resume):
+    print(f"Step 3.1 Creating resume report for {session_id}")
+    prompt_resume_report =  ("Please provide feedback on the resume provided below in terms of completeness and effectiveness by:"
     "1. Breaking down the match in these specific areas:"
     "   - Contact Information: Is it complete and professional?"
     "   - Resume Summary: Does it effectively highlight relevant skills and career goals?"
@@ -145,12 +158,19 @@ def main_method(from_browser = False):
     "- Identify any missing crucial components"
     ""
     "Provide a clear, structured response that helps understand how good the resume is.\n"
-    "The response must be in a structured json format with no new lines")
+    "The response must be in a structured markdown format"
+    ""
+    "Resume\n" +
+    resume)
 
-    result["resume_report"] = q_and_a(rag_chain=rag_chain, chat_history=chat_history, question=prompt_resume_report)
+    result = q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_resume_report)
+    print(f"Step 3.2 Response \n{result}")
+    return [result]
 
-    print(f"Step 4. Creating job compatibility report")
-    prompt_job_compatibility =  ("Please analyze the compatibility of the resume with the job description by:"
+def jd_compatibility_report(session_id, jd):
+    print(f"Step 4.1 Creating job compatibility report for {session_id}")
+    prompt_job_compatibility =  ("Please analyze the compatibility of the resume provided earlier "
+    "with the job description provided below by:"
     "1. Calculating an overall compatibility score (0-100%)"
     "2. Breaking down the match in these specific areas:"
     "   - Hard Skills Match"
@@ -164,34 +184,15 @@ def main_method(from_browser = False):
     "- Highlight specific strengths"
     "- Suggest potential improvements for the candidate"
     ""
+    "Job Description" +
+    jd +
     "Provide a clear, structured response that helps understand how closely the resume matches the job description.\n"
-    "The response must be in a structured json format with no new lines")
+    "The response must be in a structured markdown format")
 
-    result["job_compatibility"] = q_and_a(rag_chain=rag_chain, chat_history=chat_history, question=prompt_job_compatibility)
+    result = q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_job_compatibility)
+    print(f"Step 4.2 Response {result}")
+    return [result]
 
-    # Display the AI's response
-    print(f"AI: {result}")
-    if from_browser:
-      return [result]
-    # Update the chat history
-
-    print("Start chatting with the AI! Type 'exit' to end the conversation.")
-
-    while True:
-        query = input("You: ")
-        if query.lower() == "exit":
-            break
-        # Process the user's query through the retrieval chain
-        answer = q_and_a(rag_chain=rag_chain,chat_history=chat_history,question=query)
-        print(f"AI: {answer}")
-        #result = rag_chain.invoke({"input": query, "chat_history": chat_history})
-        # Display the AI's response
-        #print(f"AI: {result['answer']}")
-        # Update the chat history
-        #chat_history.append(HumanMessage(content=query))
-        #chat_history.append(SystemMessage(content=result["answer"]))
-
-
-# Main function to start the continual chat
+# Starting point
 if __name__ == "__main__":
     main_method()

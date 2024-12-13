@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "capstone"
-version = "0.2"
+version = "1.0"
 description = "IK Capstone Project (Resume Coach)"
 authors = ["Laxman", "Subhra", "Suresh"]
 
@@ -14,6 +14,7 @@ langchain-chroma= "0.1.4"
 Flask="2.2.5"
 Flask-Cors="4.0.0"
 gunicorn="21.2.0"
+toml="0.10.2"
 
 [tool.pyright]
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md

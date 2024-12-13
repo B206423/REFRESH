@@ -1,0 +1,61 @@
+$(document).ready(function() {
+    $('#submitBtn').click(function() {
+        var formData = new FormData();
+        formData.append('resume_file', $('#resume_file')[0].files[0]);
+        formData.append('jd_file', $('#jd_file')[0].files[0]);
+
+        $.ajax({
+            url: '/upload',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                var resume_file_content = marked.parse(response.resume_file_content);
+                var jd_file_content = marked.parse(response.jd_file_content);
+
+                //Store the contents in the browser's local storage to be used later
+                $('#nav-resume').html(resume_file_content);
+                $('#nav-jd').html(jd_file_content);
+                localStorage.setItem('resume_file_content', resume_file_content);
+                localStorage.setItem('jd_file_content', jd_file_content);
+                localStorage.setItem('session_id', response.session_id);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                $('#preview_response').html('<p>Error: ' + textStatus + '</p>');
+            }
+        });
+    });
+
+    $('#reportBtn').click(function() {
+        //TODO: instead of storing in client, store this in the backend's DB with key as session_id, 
+        //      similar to chat_history
+        var resume_file_content = localStorage.getItem('resume_file_content');
+        var jd_file_content = localStorage.getItem('jd_file_content');
+
+        if (resume_file_content && jd_file_content) {
+            $.ajax({
+                url: '/report',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    resume_file_content: resume_file_content,
+                    jd_file_content: jd_file_content,
+                    session_id: localStorage.getItem('session_id')
+                }),
+                success: function(response) {
+                    var resume_report = marked.parse(response.resume_report[0]);
+                    var jd_compatibility_report = marked.parse(response.jd_compatibility_report[0]);
+                    $('#nav-resumerpt').html(resume_report);
+                    $('#nav-jdcomprpt').html(jd_compatibility_report);
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('#report_response').html('<p>Error: ' + textStatus + '</p>');
+                }
+            });
+        } else {
+            $('#report_response').html('<p>Please upload the files first.</p>');
+        }
+    });
+});
