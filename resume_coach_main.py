@@ -9,6 +9,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from flask import jsonify
 import uuid
+from job_recommender import JobRecommender
 
 # Load environment variables from .env
 load_dotenv()
@@ -16,6 +17,7 @@ load_dotenv()
 # Define the persistent directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
 persistent_directory = os.path.join(current_dir, "db", "chroma_db_with_metadata")
+persistent_jobs_directory  = os.path.join(current_dir, "db", "chroma_db_jobs")
 
 # Define the embedding model
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
@@ -131,6 +133,19 @@ def main_method(from_browser = False):
 
     print(f"Resume Report\n{resume_rpt[0]}")
     print(f"Job Compatibility Report\n{jd_rpt[0]}")
+
+    recommender = JobRecommender(str(persistent_jobs_directory))
+    recommendations = recommender.get_job_recommendations(resume_file_content)
+    
+    #Print results
+    print("\nTop Job Recommendations:")
+    for i, job in enumerate(recommendations, 1):
+        print(f"\n{i}. {job['title']}")
+        print(f"Similarity Score: {job['similarity_score']:.2f}")
+        print(f"Description Preview: {job['description']}")
+        print("-" * 80)
+
+
 
 
 def resume_report(session_id, resume):
