@@ -104,7 +104,7 @@ question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 # Create a retrieval chain that combines the history-aware retriever and the question answering chain
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
-def q_and_a(session_id, rag_chain, question):
+def q_and_a(session_id, question, rag_chain=rag_chain):
   chat_history = get_chat_history(session_id)
   result = rag_chain.invoke({"input": question, "chat_history": chat_history})
   chat_history.append(HumanMessage(content=question))
@@ -149,7 +149,7 @@ def main_method(from_browser = False):
 
 
 def resume_report(session_id, resume):
-    print(f"Step 3.1 Creating resume report for {session_id}")
+    print(f"Step 2.1 Creating resume report for {session_id}")
     prompt_resume_report =  ("Please provide feedback on the resume provided below in terms of completeness and effectiveness by:"
     "1. Breaking down the match in these specific areas:"
     "   - Contact Information: Is it complete and professional?"
@@ -173,11 +173,11 @@ def resume_report(session_id, resume):
     resume)
 
     result = q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_resume_report)
-    print(f"Step 3.2 Response \n{result}")
+    print(f"Step 2.2 Response \n{result}")
     return [result]
 
 def jd_compatibility_report(session_id, jd):
-    print(f"Step 4.1 Creating job compatibility report for {session_id}")
+    print(f"Step 3.1 Creating job compatibility report for {session_id}")
     prompt_job_compatibility =  ("Please analyze the compatibility of the resume provided earlier "
     "with the job description provided below by:"
     "1. Calculating an overall compatibility score (0-100%)"
@@ -199,7 +199,7 @@ def jd_compatibility_report(session_id, jd):
     "The response must be in a structured markdown format")
 
     result = q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_job_compatibility)
-    print(f"Step 4.2 Response {result}")
+    print(f"Step 3.2 Response {result}")
     return [result]
 
 # Starting point

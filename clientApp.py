@@ -71,6 +71,15 @@ def report():
 
     return jsonify(response)
 
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.get_json()
+    message = data.get('message')
+    session_id = data.get('session_id')
+
+    reply= resume_coach_main.q_and_a(session_id, message)
+    return jsonify({'reply': reply})
+
 if __name__ == "__main__":
     clApp = ClientApp()
     app.run(host='0.0.0.0', port=9000, debug=True)

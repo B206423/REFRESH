@@ -58,4 +58,31 @@ $(document).ready(function() {
             $('#report_response').html('<p>Please upload the files first.</p>');
         }
     });
+
+    $('#sendBtn').click(function() {
+        var message = $('#chatInput').val();
+        if (message.trim() !== '') {
+            addMessage('user', message);
+            $('#chatInput').val('');
+
+            $.ajax({
+                url: '/chat',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ message: message, session_id: localStorage.getItem('session_id') }),
+                success: function(response) {
+                    addMessage('bot', response.reply);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    addMessage('bot', 'Error: ' + textStatus);
+                }
+            });
+        }
+    });
+
+    function addMessage(sender, message) {
+        var messageClass = sender === 'user' ? 'chat-message user' : 'chat-message bot';
+        $('#chatMessages').append('<div class="' + messageClass + '">' + message + '</div>');
+        $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
+    }
 });
