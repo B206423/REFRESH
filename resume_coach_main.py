@@ -120,11 +120,11 @@ def main_method(from_browser = False):
     session_id = "localhost" + str(uuid.uuid4())
 
     # read from user input, this is just for example
-    with open('resume.txt', 'r') as file:
+    with open('examples/resume.txt', 'r') as file:
       resume_file_content = file.read()
 
     # read from user input, this is just for example
-    with open('job_description.txt', 'r') as file:
+    with open('examples/job_description.txt', 'r') as file:
       jd_file_content = file.read()
 
     resume_rpt= resume_report(session_id, resume_file_content)
