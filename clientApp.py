@@ -77,7 +77,7 @@ def chat():
     message = data.get('message')
     session_id = data.get('session_id')
 
-    reply= resume_coach_main.q_and_a(session_id, message)
+    reply = resume_coach_main.q_and_a(session_id, message)
     return jsonify({'reply': reply})
 
 if __name__ == "__main__":

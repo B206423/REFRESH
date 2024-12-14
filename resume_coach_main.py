@@ -198,7 +198,7 @@ def jd_compatibility_report(session_id, jd):
     "Provide a clear, structured response that helps understand how closely the resume matches the job description.\n"
     "The response must be in a structured markdown format")
 
-    result = q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_job_compatibility)
+    result = "TODO (running into OOM)" #q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_job_compatibility)
     print(f"Step 3.2 Response {result}")
     return [result]
 
