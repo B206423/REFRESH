@@ -45,10 +45,33 @@ $(document).ready(function() {
                 }),
                 success: function(response) {
                     var resume_report = marked.parse(response.resume_report[0]);
-                    var jd_compatibility_report = marked.parse(response.jd_compatibility_report[0]);
-                    $('#nav-resumerpt').html(resume_report);
-                    $('#nav-jdcomprpt').html(jd_compatibility_report);
+                    $('#nav-resumeReport').html(resume_report);
 
+                    var jd_compatibility_report = marked.parse(response.jd_compatibility_report[0]);
+                    $('#nav-compatibilityReport').html(jd_compatibility_report);
+
+                    var jobs_recommendations_report = response.jobs_reports;
+                    //$('#nav-jobrecsrpt').html(jobs_recommendations_report);
+
+                    $('#relatedJob').html("")
+                    jobs_recommendations_report.forEach((result, index) => {
+                        // Create tab
+                        const tabId = `tab-${index}`;
+                        const tab = `<li class="nav-item">
+                                      <a class="nav-link ${index === 0 ? 'active' : ''}" id="${tabId}-tab" data-toggle="tab" href="#${tabId}" role="tab" aria-controls="${tabId}" aria-selected="${index === 0}">${index + 1}
+                                      </a>
+                                  </li>`;
+                        $('#relatedJob').append(tab);
+
+                        // Convert Markdown to HTML
+                        const htmlContent = marked.parse(result['markdown']);
+
+                        // Create tab content
+                        const tabContent = `<div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="${tabId}" role="tabpanel" aria-labelledby="${tabId}-tab">
+                                            ${htmlContent}
+                                        </div>`;
+                        $('#relatedJobContent').append(tabContent);
+                    });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     $('#report_response').html('<p>Error: ' + textStatus + '</p>');

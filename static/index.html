@@ -57,15 +57,31 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-resume-tab" data-toggle="tab" data-target="#nav-resume" type="button" role="tab" aria-controls="nav-resume" aria-selected="true">Resume</button>
                 <button class="nav-link" id="nav-jd-tab" data-toggle="tab" data-target="#nav-jd" type="button" role="tab" aria-controls="nav-jd" aria-selected="false">Job Description</button>
-                <button class="nav-link" id="nav-resumerpt-tab" data-toggle="tab" data-target="#nav-resumerpt" type="button" role="tab" aria-controls="nav-resumerpt" aria-selected="false">Resume Report</button>
-                <button class="nav-link" id="nav-jdcomprpt-tab" data-toggle="tab" data-target="#nav-jdcomprpt" type="button" role="tab" aria-controls="nav-jdcomprpt" aria-selected="false">Job Compatibility Report</button>
+                <button class="nav-link" id="nav-resumeReport-tab" data-toggle="tab" data-target="#nav-resumeReport" type="button" role="tab" aria-controls="nav-resumeReport" aria-selected="false">Resume Report</button>
+                <button class="nav-link" id="nav-compatibilityReport-tab" data-toggle="tab" data-target="#nav-compatibilityReport" type="button" role="tab" aria-controls="nav-compatibilityReport" aria-selected="false">Job Compatibility Report</button>
+                <button class="nav-link" id="nav-relatedJobs-tab" data-toggle="tab" data-target="#nav-relatedJobs" type="button" role="tab" aria-controls="nav-relatedJobs" aria-selected="false">Job Recommendations Report</button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-resume" role="tabpanel" aria-labelledby="nav-resume-tab"></div>
-            <div class="tab-pane fade" id="nav-jd" role="tabpanel" aria-labelledby="nav-jd-tab"></div>
-            <div class="tab-pane fade" id="nav-resumerpt" role="tabpanel" aria-labelledby="nav-resumerpt-tab"></div>
-            <div class="tab-pane fade" id="nav-jdcomprpt" role="tabpanel" aria-labelledby="nav-jdcomprpt-tab"></div>
+            <div class="tab-pane fade show active" id="nav-resume" role="tabpanel" aria-labelledby="nav-resume-tab">
+                <p>Contents of the parsed Resume will be displayed when the "Preview files" button is clicked after resume and job description is uploaded</p>
+            </div>
+            <div class="tab-pane fade" id="nav-jd" role="tabpanel" aria-labelledby="nav-jd-tab">
+                <p>Contents of the parsed Job description will be displayed when the "Preview files" button is clicked after resume and job description is uploaded</p>
+            </div>
+            <div class="tab-pane fade" id="nav-resumeReport" role="tabpanel" aria-labelledby="nav-resumeReport-tab">
+                <p>Detailed analysis of the Resume will be displayed when "Get Report" button is clicked</p>
+            </div>
+            <div class="tab-pane fade" id="nav-compatibilityReport" role="tabpanel" aria-labelledby="nav-compatibilityReport-tab">
+                <p>Detailed analysis of the compatibility of the Resume with the Job when "Get Report" button is clicked</p>
+            </div>
+            <div class="tab-pane fade" id="nav-relatedJobs" role="tabpanel" aria-labelledby="nav-relatedJobs-tab">
+                <p>Other relevant jobs from the Corpus for the provided Resume shall be displayed below when "Get Report" button is clicked</p>
+                <div class="container">
+                    <ul class="nav nav-tabs" id="relatedJob" role="tablist"></ul>
+                    <div class="tab-content" id="relatedJobContent"></div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

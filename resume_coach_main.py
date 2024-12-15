@@ -147,8 +147,9 @@ def main_method(from_browser = False):
     print("\nTop Job Recommendations:")
     for i, job in enumerate(jobs_recommendations, 1):
         print(f"\n{i}. {job['title']}")
-        print(f"Similarity Score: {job['similarity_score']:.2f}")
-        print(f"Description Preview: {job['description']}")
+        print(f"{job['markdown']}")
+        #print(f"Similarity Score: {job['similarity_score']:.2f}")
+        #print(f"Description Preview: {job['description']}")
         print("-" * 80)
 
 def jobs_report(session_id, resume):

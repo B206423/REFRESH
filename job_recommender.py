@@ -54,14 +54,15 @@ class JobRecommender:
                 print("[DEBUG] Collection Data count: ", collection_data_count)
                 self.needs_data_load = False
             else:
-                print("Collection exists but is empty. Will load data.")
+                print("[DEBUG] Collection exists but is empty. Will load data.")
                 self.needs_data_load = True
         else:
-            print(f"Creating new collection: {self.collection_name}")
-            self.job_collection = self.chroma_client.create_collection(name=self.collection_name)
-            self.needs_data_load = True
+            print(f"[DEBUG] No collection by name {self.collection_name} exists, no job recommendations will be provided")
+            #self.job_collection = self.chroma_client.create_collection(name=self.collection_name)
+            #self.needs_data_load = True
         
         self.llm = ChatOpenAI(temperature=0)
+        # unused, remove?
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200,
@@ -97,13 +98,13 @@ class JobRecommender:
                 )
                 
                 processed_count += 1
-                print(f"Processed job {processed_count}: {title}")
+                print(f"[DEBUG] Processed job {processed_count}: {title}")
 
             except Exception as e:
-                print(f"Error processing job {row['job_id']}: {e}")
+                print(f"[ERROR] Error processing job {row['job_id']}: {e}")
                 continue
 
-        print(f"Successfully processed {processed_count} jobs")
+        print(f"[DEBUG] Successfully processed {processed_count} jobs")
     
     def load_jobs_from_csv(self, file_path: str) -> None:
         """
@@ -114,7 +115,7 @@ class JobRecommender:
             file_path (str): Path to the CSV file containing job data
         """
         if not self.needs_data_load:
-            print("Database already exists with data. Skipping data load.")
+            print("[DEBUG] Database already exists with data. Skipping data load.")
             return
             
         try:
@@ -130,10 +131,10 @@ class JobRecommender:
             
             os.makedirs(self.db_path, exist_ok=True)
             self.process_and_store_jobs(df)
-            print("Successfully loaded data into database.")
+            print("[DEBUG] Successfully loaded data into database.")
             
         except Exception as e:
-            print(f"Error loading jobs from CSV: {e}")
+            print(f"[ERROR] Error loading jobs from CSV: {e}")
             raise
 
 
@@ -165,7 +166,7 @@ class JobRecommender:
             return {"query": query}
             
         except Exception as e:
-            print(f"Error parsing resume: {e}")
+            print(f"[ERROR] Error parsing resume: {e}")
             return {"query": resume_text}
 
     def get_job_recommendations(self, resume_text: str, top_k: int = 5) -> List[Dict[str, Any]]:
@@ -198,8 +199,9 @@ class JobRecommender:
                         'job_id': results['ids'][0][i],
                         'title': metadata['title'],
                         'description': metadata['description'][:200] + "...",  # Preview # type: ignore
-                        'similarity_score': similarity_score
+                        'similarity_score': f"{similarity_score:.0%}"
                     }
+                    job['markdown'] = "## Title: " + job['title'] + "\n##### Similarity Score: " + str(job['similarity_score']) + "\n### Job Id: " + str(job['job_id']) + "\n### Job Description:\n\n" + metadata['description'] + "\n"
                     recommendations.append(job)
             else:
               print(f"[DEBUG] no results found")
@@ -207,5 +209,5 @@ class JobRecommender:
             return sorted(recommendations, key=lambda x: x['similarity_score'], reverse=True)
             
         except Exception as e:
-            print(f"Error getting job recommendations: {e}")
+            print(f"[ERROR] Error getting job recommendations: {e}")
             return []
