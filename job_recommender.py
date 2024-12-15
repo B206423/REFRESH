@@ -42,16 +42,16 @@ class JobRecommender:
         
         # Check if collection exists and has data
         existing_collections = self.chroma_client.list_collections()
+        print(f"[DEBUG] Collections list is {existing_collections}")
         collection_exists = any(col.name == self.collection_name for col in existing_collections)
         
         if collection_exists:
-            #print(f"Using existing collection: {self.collection_name}")
+            print(f"[DEBUG] Using existing collection: {self.collection_name}")
             self.job_collection = self.chroma_client.get_collection(name=self.collection_name)
             # Check if collection has data
             collection_data_count = self.job_collection.count()
             if collection_data_count > 0:
-                #print(f"Found {len(collection_data['ids'])} existing job records")
-                #print("Collection Data count: ", collection_data_count)
+                print("[DEBUG] Collection Data count: ", collection_data_count)
                 self.needs_data_load = False
             else:
                 print("Collection exists but is empty. Will load data.")
@@ -161,6 +161,7 @@ class JobRecommender:
             
             # Create a simpler query from the response
             query = f"{resume_text} {response.content}"
+            print(f"[DEBUG] Got response from llm: {response.content}")
             return {"query": query}
             
         except Exception as e:
@@ -173,9 +174,11 @@ class JobRecommender:
             # Process resume
             resume_info = self.process_resume(resume_text)
             query = resume_info["query"]
+            print(f"[DEBUG] Processed resume is: {query}")
             
             # Generate embedding for the query
             query_embedding = self.embedding_model.embed_documents([query])[0]
+            print(f"[DEBUG] query_embedding count is: {len(query_embedding)}")
             
             # Get recommendations
             results = self.job_collection.query(
@@ -183,9 +186,10 @@ class JobRecommender:
                 n_results=top_k,
                 include=['metadatas', 'distances'] # type: ignore
             )
-            
+
             recommendations = []
             if results['ids'] and results['ids'][0]:
+                print(f"[DEBUG] results length is: {len(results['ids'][0])}")
                 for i in range(len(results['ids'][0])):
                     metadata = results['metadatas'][0][i] # type: ignore
                     similarity_score = 1 / (1 + results['distances'][0][i]) # type: ignore
@@ -197,6 +201,8 @@ class JobRecommender:
                         'similarity_score': similarity_score
                     }
                     recommendations.append(job)
+            else:
+              print(f"[DEBUG] no results found")
             
             return sorted(recommendations, key=lambda x: x['similarity_score'], reverse=True)
             

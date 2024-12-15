@@ -38,6 +38,3 @@ COPY . /app
 # RUN pip3 install -r requirements.txt
 EXPOSE $PORT
 CMD gunicorn --workers=4 --bind 0.0.0.0:$PORT clientApp:app
-
-#docker build -t capstone .
-#docker run -p 9000:9000 -e PORT=9000 --rm -it capstone

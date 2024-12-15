@@ -63,12 +63,13 @@ def report():
 
     resume_report= resume_coach_main.resume_report(session_id, resume_file_content)
     jd_compatibility_report = resume_coach_main.jd_compatibility_report(session_id, jd_file_content)
-    # TODO: Suresh: add matching jobs
-    #jobs_reports = q_and_a(rec_prompt, chat_history)
+
+    jobs_reports = resume_coach_main.jobs_report(session_id, resume_file_content)
 
     response = {
         'resume_report': resume_report,
-        'jd_compatibility_report': jd_compatibility_report
+        'jd_compatibility_report': jd_compatibility_report,
+        'jobs_reports': jobs_reports
     }
 
     return jsonify(response)

@@ -46,8 +46,7 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 2. Run the Docker container
 
    ```bash
-   PORT=8000
-   docker run --name=refresh --hostname=refresh -p $PORT:$PORT -e PORT=$PORT --rm -it refresh
+   docker run --name=refresh --hostname=refresh -p 8000:8000 -e PORT=8000 -v "<fullpath to chroma_db_jobs>:/app/db/chroma_db_jobs" --rm -it refresh
    ```
 
 3. Launch browser and go to http://localhost:$PORT/

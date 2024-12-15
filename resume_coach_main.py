@@ -106,6 +106,7 @@ question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 
 # Create a retrieval chain that combines the history-aware retriever and the question answering chain
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
+recommender = JobRecommender(str(persistent_jobs_directory))
 
 def q_and_a(session_id, question, rag_chain=rag_chain):
   chat_history = get_chat_history(session_id)
@@ -134,22 +135,28 @@ def main_method(from_browser = False):
 
     resume_rpt= resume_report(session_id, resume_file_content)
     jd_rpt = jd_compatibility_report(session_id, jd_file_content)
-    #jobs_reports = q_and_a(session_id, rec_prompt, chat_history)
 
     print(f"Resume Report\n{resume_rpt[0]}")
     print(f"Job Compatibility Report\n{jd_rpt[0]}")
 
-    recommender = JobRecommender(str(persistent_jobs_directory))
-    recommendations = recommender.get_job_recommendations(resume_file_content)
+    print(f"Step3.1 Starting Job Compatibility Report\n")
+    print(f"Step3.2 Initiazed recommendor with needs_data_load = {recommender.needs_data_load}\n")
+    jobs_recommendations = recommender.get_job_recommendations(resume_file_content)
     
     #Print results
     print("\nTop Job Recommendations:")
-    for i, job in enumerate(recommendations, 1):
+    for i, job in enumerate(jobs_recommendations, 1):
         print(f"\n{i}. {job['title']}")
         print(f"Similarity Score: {job['similarity_score']:.2f}")
         print(f"Description Preview: {job['description']}")
         print("-" * 80)
 
+def jobs_report(session_id, resume):
+  print(f"Step 3.1 Creating jobs report for {session_id}")
+  recommendations = recommender.get_job_recommendations(resume)
+  print(f"Step 3.2 Response \n{recommendations}")
+  return recommendations
+   
 def resume_report(session_id, resume):
     print(f"Step 2.1 Creating resume report for {session_id}")
     prompt_resume_report =  ("Please provide feedback on the resume provided below in terms of completeness and effectiveness by:"
