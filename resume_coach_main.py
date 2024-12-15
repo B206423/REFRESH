@@ -93,6 +93,7 @@ chat_histories = {}
 def get_chat_history(session_id):
    chat_history = chat_histories.get(session_id)
    if chat_history is None:
+      print(f"[DEBUG] no chat_history found for session_id {session_id}")
       chat_history = []
       chat_histories[session_id] = chat_history
    print(f"[DEBUG] get-Chat history count for session_id {session_id} is {len(chat_history)}")
@@ -168,9 +169,9 @@ def resume_report(session_id, resume):
     "- Identify any missing crucial components"
     ""
     "Provide a clear, structured response that helps understand how good the resume is.\n"
-    "The response must be in a structured markdown format"
+    "The response must be in a structured markdown format\n"
     ""
-    "Resume\n" +
+    "Resume\n\n" +
     resume)
 
     result = q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_resume_report)
@@ -194,10 +195,10 @@ def jd_compatibility_report(session_id, jd):
     "- Highlight specific strengths"
     "- Suggest potential improvements for the candidate"
     ""
-    "Job Description" +
+    "Job Description\n\n" +
     jd +
-    "Provide a clear, structured response that helps understand how closely the resume matches the job description.\n"
-    "The response must be in a structured markdown format")
+    "\n\nProvide a clear, structured response that helps understand how closely the resume matches the job description.\n"
+    "The response must be in a structured markdown format\n")
 
     result = q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_job_compatibility)
  
