@@ -46,10 +46,11 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 2. Run the Docker container
 
    ```bash
-   docker run -p 9000:9000 -e PORT=9000 --rm -it refresh
+   PORT=8000
+   docker run --name=refresh --hostname=refresh -p $PORT:$PORT -e PORT=$PORT --rm -it refresh
    ```
 
-3. Launch browser and go to http://localhost:9000/
+3. Launch browser and go to http://localhost:$PORT/
 
 ## Release notes
 

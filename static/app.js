@@ -5,7 +5,7 @@ $(document).ready(function() {
         formData.append('jd_file', $('#jd_file')[0].files[0]);
 
         $.ajax({
-            url: '/upload',
+            url: 'upload',
             type: 'POST',
             data: formData,
             processData: false,
@@ -35,7 +35,7 @@ $(document).ready(function() {
 
         if (resume_file_content && jd_file_content) {
             $.ajax({
-                url: '/report',
+                url: 'report',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -66,7 +66,7 @@ $(document).ready(function() {
             $('#chatInput').val('');
 
             $.ajax({
-                url: '/chat',
+                url: 'chat',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ message: message, session_id: localStorage.getItem('session_id') }),

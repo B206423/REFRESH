@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 import os
 from flask_cors import CORS, cross_origin
 import resume_coach_main
@@ -19,7 +19,9 @@ class ClientApp:
 @app.route("/", methods=['GET'])
 @cross_origin()
 def home():
-    return render_template('index.html')
+    #return render_template('index.html')
+    return send_from_directory('static', 'index.html')
+
 
 @app.route("/version", methods=['GET'])
 @cross_origin()

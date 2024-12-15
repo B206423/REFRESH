@@ -95,6 +95,8 @@ def get_chat_history(session_id):
    if chat_history is None:
       chat_history = []
       chat_histories[session_id] = chat_history
+   print(f"[DEBUG] get-Chat history count for session_id {session_id} is {len(chat_history)}")
+   print(f"[DEBUG] get-Chat history:\n{chat_history}")
    return chat_history
 
 # Create a chain to combine documents for question answering
@@ -109,6 +111,8 @@ def q_and_a(session_id, question, rag_chain=rag_chain):
   result = rag_chain.invoke({"input": question, "chat_history": chat_history})
   chat_history.append(HumanMessage(content=question))
   chat_history.append(SystemMessage(content=result["answer"]))
+  print(f"[DEBUG] qa-Chat history count for session_id {session_id} is {len(chat_history)}")
+  print(f"[DEBUG] qa-Chat history:\n{chat_history}")
   return result["answer"]
 
 # Function to simulate a continual chat
@@ -144,9 +148,6 @@ def main_method(from_browser = False):
         print(f"Similarity Score: {job['similarity_score']:.2f}")
         print(f"Description Preview: {job['description']}")
         print("-" * 80)
-
-
-
 
 def resume_report(session_id, resume):
     print(f"Step 2.1 Creating resume report for {session_id}")
@@ -198,7 +199,8 @@ def jd_compatibility_report(session_id, jd):
     "Provide a clear, structured response that helps understand how closely the resume matches the job description.\n"
     "The response must be in a structured markdown format")
 
-    result = "TODO (running into OOM)" #q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_job_compatibility)
+    result = q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_job_compatibility)
+ 
     print(f"Step 3.2 Response {result}")
     return [result]
 

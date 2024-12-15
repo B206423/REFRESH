@@ -19,7 +19,8 @@ ENV PYTHONFAULTHANDLER=1 \
 RUN apt-get update && apt-get upgrade -y \
   && apt-get install --no-install-recommends -y \
     bash \
-    curl
+    curl \
+    vim
 
 # System deps:
 RUN curl -sSL https://install.python-poetry.org | python3 -
