@@ -82,7 +82,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#sendBtn').click(function() {
+    function sendMessage() {
         var message = $('#chatInput').val();
         if (message.trim() !== '') {
             addMessage('user', message);
@@ -100,6 +100,17 @@ $(document).ready(function() {
                     addMessage('bot', 'Error: ' + textStatus);
                 }
             });
+        }
+    }
+
+    $('#sendBtn').click(function() {
+        sendMessage();
+    });
+
+    $('#chatInput').keypress(function(event) {
+        if (event.which === 13) { // Enter key pressed
+            event.preventDefault(); // Prevent the default form submission
+            sendMessage();
         }
     });
 
