@@ -7,9 +7,7 @@ from langchain_chroma import Chroma
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from flask import jsonify
 import uuid
-from job_recommender import JobRecommender
 
 # Load environment variables from .env
 load_dotenv()
@@ -23,12 +21,16 @@ persistent_jobs_directory  = os.path.join(current_dir, "db", "chroma_db_jobs")
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
 # Load the existing vector store with the embedding function
-db = Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
+default_db = Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
+
+# Create db for storing the corpus of all job descriptions
+jobs_db = Chroma(persist_directory=persistent_jobs_directory, 
+                 collection_name = "job_descriptions", embedding_function=embeddings)
 
 # Create a retriever for querying the vector store
 # `search_type` specifies the type of search (e.g., similarity)
 # `search_kwargs` contains additional arguments for the search (e.g., number of results to return)
-retriever = db.as_retriever(
+retriever = default_db.as_retriever(
     search_type="similarity",
     search_kwargs={"k": 3},
 )
@@ -106,7 +108,6 @@ question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 
 # Create a retrieval chain that combines the history-aware retriever and the question answering chain
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
-recommender = JobRecommender(str(persistent_jobs_directory))
 
 def q_and_a(session_id, question, rag_chain=rag_chain):
   chat_history = get_chat_history(session_id)
@@ -138,26 +139,46 @@ def main_method(from_browser = False):
 
     print(f"Resume Report\n{resume_rpt[0]}")
     print(f"Job Compatibility Report\n{jd_rpt[0]}")
-
-    print(f"Step3.1 Starting Job Compatibility Report\n")
-    print(f"Step3.2 Initiazed recommendor with needs_data_load = {recommender.needs_data_load}\n")
-    jobs_recommendations = recommender.get_job_recommendations(resume_file_content)
-    
-    #Print results
-    print("\nTop Job Recommendations:")
-    for i, job in enumerate(jobs_recommendations, 1):
-        print(f"\n{i}. {job['title']}")
-        print(f"{job['markdown']}")
-        #print(f"Similarity Score: {job['similarity_score']:.2f}")
-        #print(f"Description Preview: {job['description']}")
-        print("-" * 80)
+    jobs_recommendations = jobs_report(session_id, resume_file_content)
+    print(f"Jobs Recommendations\n{jobs_recommendations}")
 
 def jobs_report(session_id, resume):
-  print(f"Step 3.1 Creating jobs report for {session_id}")
-  recommendations = recommender.get_job_recommendations(resume)
-  print(f"Step 3.2 Response \n{recommendations}")
-  return recommendations
-   
+  print(f"Step 4.1 Jobs report started for {session_id}")
+  jobs_recommendations = []
+  try:
+    prompt_resume_report = ("Extract key information from this resume:"
+      "      Response should include:"
+      "      1. Skills (both technical and soft skills)"
+      "      2. Experience level (in years if mentioned)"
+      "      3. Job titles/roles"
+      "      4. Industry domains/fields"
+      "      Keep it focused on the most important elements."
+    "Resume\n\n" +
+    resume)
+
+    processed_resume = q_and_a(rag_chain=rag_chain, session_id=session_id, question=prompt_resume_report)
+
+    # Get recommendations
+    results = jobs_db.similarity_search_with_score(
+        query=processed_resume,
+        k=5,
+    )
+    print(f"[DEBUG] Results size: {len(results)}")
+    for res, score in results:
+        job = {'title' : res.metadata['title']}
+        job['markdown'] = "## Title: " + res.metadata['title'] \
+        + "\n##### Similarity Score: " + "{:.2f}".format(score) \
+        + "\n### Job Description:\n\n" + res.metadata['description'] + "\n"
+        jobs_recommendations.append(job)
+      
+  except Exception as e:
+    print(f"[ERROR] Error getting job recommendations: {e}")
+
+  print(f"Step 4.2 Response \n{len(jobs_recommendations)}\n\n")
+  if (len(jobs_recommendations) > 0):
+    print(f"Step 4.3 Example recommendation \n{jobs_recommendations[0]}\n\n")   
+  return jobs_recommendations
+
 def resume_report(session_id, resume):
     print(f"Step 2.1 Creating resume report for {session_id}")
     prompt_resume_report =  ("Please provide feedback on the resume provided below in terms of completeness and effectiveness by:"
