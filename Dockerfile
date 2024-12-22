@@ -36,5 +36,6 @@ RUN poetry install --no-interaction --no-ansi
 COPY . /app
 
 # RUN pip3 install -r requirements.txt
-EXPOSE $PORT
-CMD gunicorn --workers=1 --bind 0.0.0.0:$PORT --timeout 120 --log-level=debug clientApp:app
+# TODO: use variable for port number
+EXPOSE 8000
+CMD ["gunicorn"  , "--workers=1", "--bind", "0.0.0.0:8000", "--timeout", "120", "--log-level=debug", "clientApp:app"]

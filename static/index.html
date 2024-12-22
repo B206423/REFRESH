@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REFRESH</title>
+    <title>Refresh Your Resume!</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/styles.css" rel="stylesheet">
 </head>
@@ -31,8 +32,20 @@
                         <label for="jd_file">Upload Job Description</label>
                         <input type="file" class="form-control-file" id="jd_file" name="jd_file">
                     </div>
-                    <button type="button" class="btn btn-primary" id="submitBtn">Preview files</button>
-                    <button type="button" class="btn btn-secondary" id="reportBtn">Get Report</button>
+                    <button type="button" class="btn btn-primary" id="previewBtn">Preview files
+                      <div id="spinnerPreview" class="spinner" style="display: none;">
+                          <div class="spinner-border" role="status">
+                              <span class="sr-only">Loading...</span>
+                          </div>
+                      </div>
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="reportBtn">Get Report
+                      <div id="spinnerReport" class="spinner" style="display: none;">
+                          <div class="spinner-border" role="status">
+                              <span class="sr-only">Loading...</span>
+                          </div>
+                      </div>
+                    </button>
                 </form>
                 <div id="preview_response" class="mt-4"></div>
                 <div id="report_response" class="mt-4"></div>
@@ -44,7 +57,13 @@
                     <div class="input-group mt-3">
                         <input type="text" id="chatInput" class="form-control" placeholder="Type a message...">
                         <div class="input-group-append">
-                            <button class="btn btn-primary" id="sendBtn">Send</button>
+                            <button class="btn btn-primary" id="chatBtn">Chat
+                              <div id="spinnerChat" class="spinner" style="display: none;">
+                                  <div class="spinner-border" role="status">
+                                      <span class="sr-only">Loading...</span>
+                                  </div>
+                              </div>
+                            </button>
                         </div>
                     </div>
                 </div>

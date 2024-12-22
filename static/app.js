@@ -1,5 +1,14 @@
 $(document).ready(function() {
-    $('#submitBtn').click(function() {
+    buttonDisable($("#previewBtn"));
+    buttonDisable($("#reportBtn"));
+    buttonDisable($("#chatBtn"));
+
+    $('#jd_file').click(function() {
+        buttonEnable($("#previewBtn"));
+    });
+
+    $('#previewBtn').click(function() {
+        spinnerEnable($("#spinnerPreview"));
         var formData = new FormData();
         formData.append('resume_file', $('#resume_file')[0].files[0]);
         formData.append('jd_file', $('#jd_file')[0].files[0]);
@@ -11,6 +20,7 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
+                spinnerDisable($("#spinnerPreview"));
                 var resume_file_content = marked.parse(response.resume_file_content);
                 var jd_file_content = marked.parse(response.jd_file_content);
 
@@ -20,14 +30,18 @@ $(document).ready(function() {
                 localStorage.setItem('resume_file_content', resume_file_content);
                 localStorage.setItem('jd_file_content', jd_file_content);
                 localStorage.setItem('session_id', response.session_id);
+                buttonEnable($("#reportBtn"));
             },
             error: function(jqXHR, textStatus, errorThrown) {
+                spinnerDisable($("#spinnerPreview"));
                 $('#preview_response').html('<p>Error: ' + textStatus + '</p>');
             }
         });
     });
 
     $('#reportBtn').click(function() {
+        buttonDisable($("#previewBtn"));
+        spinnerEnable($("#spinnerReport"));
         //TODO: instead of storing in client, store this in the backend's DB with key as session_id, 
         //      similar to chat_history
         var resume_file_content = localStorage.getItem('resume_file_content');
@@ -44,6 +58,9 @@ $(document).ready(function() {
                     session_id: localStorage.getItem('session_id')
                 }),
                 success: function(response) {
+                    spinnerDisable($("#spinnerReport"));
+                    buttonEnable($("#chatBtn"));
+
                     var resume_report = marked.parse(response.resume_report[0]);
                     $('#nav-resumeReport').html(resume_report);
 
@@ -51,7 +68,6 @@ $(document).ready(function() {
                     $('#nav-compatibilityReport').html(jd_compatibility_report);
 
                     var jobs_recommendations_report = response.jobs_reports;
-                    //$('#nav-jobrecsrpt').html(jobs_recommendations_report);
 
                     $('#relatedJob').html("")
                     jobs_recommendations_report.forEach((result, index) => {
@@ -74,6 +90,7 @@ $(document).ready(function() {
                     });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                    spinnerDisable($("#spinnerReport"));
                     $('#report_response').html('<p>Error: ' + textStatus + '</p>');
                 }
             });
@@ -82,7 +99,25 @@ $(document).ready(function() {
         }
     });
 
+    function spinnerDisable(spinnerId) {
+        spinnerId.hide();
+    }
+
+    function spinnerEnable(spinnerId) {
+        spinnerId.show();
+    }
+
+    function buttonDisable(btnHdl) {
+        btnHdl.prop("disabled", true).addClass("disabled");
+    }
+
+    function buttonEnable(btnHdl) {
+        btnHdl.prop("disabled", false).removeClass("disabled");
+    }
+
     function sendMessage() {
+        buttonDisable($("#previewBtn"));
+        spinnerEnable($("#spinnerChat"));
         var message = $('#chatInput').val();
         if (message.trim() !== '') {
             addMessage('user', message);
@@ -94,23 +129,28 @@ $(document).ready(function() {
                 contentType: 'application/json',
                 data: JSON.stringify({ message: message, session_id: localStorage.getItem('session_id') }),
                 success: function(response) {
+                    spinnerDisable($("#spinnerChat"));
                     addMessage('bot', response.reply);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                    spinnerDisable($("#spinnerChat"));
                     addMessage('bot', 'Error: ' + textStatus);
                 }
             });
         }
     }
 
-    $('#sendBtn').click(function() {
+    $('#chatBtn').click(function() {
         sendMessage();
     });
 
     $('#chatInput').keypress(function(event) {
         if (event.which === 13) { // Enter key pressed
             event.preventDefault(); // Prevent the default form submission
-            sendMessage();
+            //dont sendMessage() if chat is disabled 
+            if (!$("#chatBtn").prop("disabled")) {
+                sendMessage();
+            }
         }
     });
 

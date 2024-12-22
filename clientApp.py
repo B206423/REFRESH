@@ -4,6 +4,7 @@ from flask_cors import CORS, cross_origin
 import resume_coach_main
 import uuid
 import toml
+import pdfplumber
 
 os.putenv('LANG', 'en_US.UTF-8')
 os.putenv('LC_ALL', 'en_US.UTF-8')
@@ -38,9 +39,8 @@ def upload_files():
     if not resume_file or not jd_file:
         return jsonify({'error': 'Both files are required'}), 400
 
-    # TODO: read pdf and convert to text
-    resume_file_content = resume_file.read().decode('utf-8')
-    jd_file_content = jd_file.read().decode('utf-8')
+    resume_file_content = extract_text_from_file(resume_file)
+    jd_file_content = extract_text_from_file(jd_file)
     session_id = str(uuid.uuid4())
 
     # TODO: store the file contents into a DB
@@ -51,6 +51,19 @@ def upload_files():
     }
 
     return jsonify(response)
+
+def extract_text_from_file(file):
+    if file.filename.endswith('.pdf'):
+        return pdf_to_text(file)
+    else:
+        return file.read().decode('utf-8')
+
+def pdf_to_text(file_path):
+    with pdfplumber.open(file_path) as pdf:
+        text = ''
+        for page in pdf.pages:
+            text += page.extract_text()
+        return text    
 
 @app.route('/report', methods=['POST'])
 def report():

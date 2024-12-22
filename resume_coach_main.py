@@ -37,7 +37,7 @@ retriever = db.as_retriever(
 #inference: llama-3.2, text embedding: nomic-embed-text
 
 # Create a ChatOpenAI model
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 # From https://python.langchain.com/v0.1/docs/use_cases/question_answering/chat_history/#contextualizing-the-question
 # Contextualize question prompt
