@@ -9,9 +9,6 @@ env.bak/
 venv.bak/
 .DS_Store
 
-resume.txt
-job_description.txt
-
 db
 # Installer logs
 pip-log.txt
