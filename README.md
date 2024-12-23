@@ -42,6 +42,10 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 ### 6. Chat with Coach 
   - Ability to chat on anything the user wants while maintaining the context of the resume and job description
 
+## Sequence diagram
+
+![Sequence Diagram](./docs/sequencediagram.svg)
+
 ## Technolgy Stack 
 - Web: jQuery, html 
 - Vector DB: Chroma DB
