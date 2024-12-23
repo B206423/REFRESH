@@ -193,7 +193,12 @@ p {
 }
 
 .form-group label {
+    text-align: right;
     font-weight: bold;
+}
+
+.form-control {
+    width: auto;
 }
 
 .btn {

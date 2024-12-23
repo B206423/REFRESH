@@ -35,7 +35,7 @@ def get_version():
 def upload_files():
     resume_file = request.files.get('resume_file')
     jd_file = request.files.get('jd_file')
-
+    
     if not resume_file or not jd_file:
         return jsonify({'error': 'Both files are required'}), 400
 
@@ -74,10 +74,13 @@ def report():
     jd_file_content = data.get('jd_file_content')
     session_id = data.get('session_id')
 
-    resume_report= resume_coach_main.resume_report(session_id, resume_file_content)
-    jd_compatibility_report = resume_coach_main.jd_compatibility_report(session_id, jd_file_content)
+    # Inference model
+    model_name = data.get('model_name')
 
-    jobs_reports = resume_coach_main.jobs_report(session_id, resume_file_content)
+    rag_chain = resume_coach_main.get_rag_chain(model_name)
+    resume_report= resume_coach_main.resume_report(rag_chain, session_id, resume_file_content)
+    jd_compatibility_report = resume_coach_main.jd_compatibility_report(rag_chain, session_id, jd_file_content)
+    jobs_reports = resume_coach_main.jobs_report(rag_chain, session_id, resume_file_content)
 
     response = {
         'resume_report': resume_report,
@@ -92,8 +95,10 @@ def chat():
     data = request.get_json()
     message = data.get('message')
     session_id = data.get('session_id')
+    model_name = data.get('model_name')
+    rag_chain = resume_coach_main.get_rag_chain(model_name)
 
-    reply = resume_coach_main.q_and_a(session_id=session_id, question=message)
+    reply = resume_coach_main.q_and_a(rag_chain, session_id=session_id, question=message)
     return jsonify({'reply': reply})
 
 if __name__ == "__main__":

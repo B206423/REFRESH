@@ -52,6 +52,15 @@
             </div>
             <div class="col-md-9">
                 <h2 class="text-center">Chat with the Coach</h2>
+                <div class="form-group row">
+                    <label for="modelDropdown" class="col-sm-6 col-form-label">Select model inference model:</label>
+                    <div class="col-sm-6">
+                        <select id="modelDropdown" class="form-control">
+                        <option value="gpt-4o-mini">OpenAI's gpt-4o-mini</option>
+                        <option value="llama-3.2">Meta's llama-3.2</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="chat-box mt-4">
                     <div id="chatMessages" class="chat-messages"></div>
                     <div class="input-group mt-3">

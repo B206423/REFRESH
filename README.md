@@ -75,6 +75,9 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
 ## Release notes
 
+### v2.1
+  - UI support for changing LLM inference model (backend pending)
+
 ### v2.0
   - improve layout
   - add job recommendations to the web UI

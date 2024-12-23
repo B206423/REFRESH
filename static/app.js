@@ -55,7 +55,8 @@ $(document).ready(function() {
                 data: JSON.stringify({
                     resume_file_content: resume_file_content,
                     jd_file_content: jd_file_content,
-                    session_id: localStorage.getItem('session_id')
+                    session_id: localStorage.getItem('session_id'),
+                    model_name: $('#modelDropdown').val()
                 }),
                 success: function(response) {
                     spinnerDisable($("#spinnerReport"));
@@ -127,7 +128,7 @@ $(document).ready(function() {
                 url: 'chat',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ message: message, session_id: localStorage.getItem('session_id') }),
+                data: JSON.stringify({ message: message, session_id: localStorage.getItem('session_id'), model_name: $('#modelDropdown').val() }),
                 success: function(response) {
                     spinnerDisable($("#spinnerChat"));
                     addMessage('bot', response.reply);
