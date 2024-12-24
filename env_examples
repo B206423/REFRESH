@@ -1,0 +1,2 @@
+LLAMA_API_KEY=your-secure-llama-api-key
+LLAMA_BASE_URL=http://llama.server/v1
