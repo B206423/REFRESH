@@ -97,8 +97,23 @@ def get_chat_history(session_id):
    return chat_history
 
 def build_rag_chain(model_name="gpt-4o-mini"):
-  # Create a ChatOpenAI model
-  llm = ChatOpenAI(model=model_name, temperature=0)
+
+  
+  # Check if the selected model is 'gpt-4o-mini'
+  if model_name="gpt-4o-mini":
+    llm = ChatOpenAI(model=model_name, temperature=0)
+  
+  # Check if the selected model is 'llama-3.2'  
+  elif model_name="llama-3.2":
+    llm = ChatOpenAI(
+        api_key="ollama",
+        model="llama3.2",
+        base_url="http://100.70.29.91:11434/v1",
+        temperature=0.5,)
+  else:
+  # If the supplied model_name is not recognized, raise a ValueError
+      raise ValueError(f"Model '{model_name}' is not supported.")
+  
   # Create a history-aware retriever
   # This uses the LLM to help reformulate the question based on chat history
   history_aware_retriever = create_history_aware_retriever(
