@@ -98,6 +98,9 @@ def get_chat_history(session_id):
 
 def build_rag_chain(model_name="gpt-4o-mini"):
 
+  # Load sensitive configurations from environment variables
+  llama_api_key = os.getenv("LLAMA_API_KEY")
+  llama_base_url = os.getenv("LLAMA_BASE_URL")
   
   # Check if the selected model is 'gpt-4o-mini'
   if model_name="gpt-4o-mini":
@@ -106,9 +109,9 @@ def build_rag_chain(model_name="gpt-4o-mini"):
   # Check if the selected model is 'llama-3.2'  
   elif model_name="llama-3.2":
     llm = ChatOpenAI(
-        api_key="ollama",
+        api_key=llama_api_key,
         model="llama3.2",
-        base_url="http://100.70.29.91:11434/v1",
+        base_url=llama_base_url,
         temperature=0.5,)
   else:
   # If the supplied model_name is not recognized, raise a ValueError
