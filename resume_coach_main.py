@@ -103,11 +103,11 @@ def build_rag_chain(model_name="gpt-4o-mini"):
   llama_base_url = os.getenv("LLAMA_BASE_URL")
   
   # Check if the selected model is 'gpt-4o-mini'
-  if model_name="gpt-4o-mini":
+  if model_name=="gpt-4o-mini":
     llm = ChatOpenAI(model=model_name, temperature=0)
   
   # Check if the selected model is 'llama-3.2'  
-  elif model_name="llama-3.2":
+  elif model_name=="llama-3.2":
     llm = ChatOpenAI(
         api_key=llama_api_key,
         model="llama3.2",
