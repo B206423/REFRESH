@@ -1,22 +1,28 @@
 [tool.poetry]
-name = "capstone"
-version = "2.1"
+name = "REFRESH"
+version = "1.0"
 description = "IK Capstone Project (Resume Coach)"
 authors = ["Laxman", "Subhra", "Suresh"]
 
 [tool.poetry.dependencies]
-python = ">=3.10.0,<3.12"
-langchain-openai = "^0.1.8"
+python = "^3.10"
 python-dotenv = "^1.0.1"
-langchain = "^0.2.1"
-langchain-community = "^0.2.1"
-langchain-chroma= "0.1.4"
-Flask="2.2.5"
-Flask-Cors="4.0.0"
-gunicorn="21.2.0"
-toml="0.10.2"
-pandas="2.2.3"
-pdfplumber="0.11.4"
+langchain = "^0.3.13"
+langchain-openai = "^0.2.14"
+langchain-community = "^0.3.13"
+langchain-ollama = "^0.2.2"
+langchain-chroma = "^0.1.4"
+Flask = "^3.1.0"
+Flask-Cors = "^5.0.0"
+gunicorn = "^23.0.0"
+toml = "^0.10.2"
+pandas = "^2.2.3"
+pdfplumber = "^0.11.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+ruff = "^0.8.4"
+pyright = "^1.1.391"
 
 [tool.pyright]
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md

@@ -20,7 +20,9 @@ RUN apt-get update && apt-get upgrade -y \
   && apt-get install --no-install-recommends -y \
     bash \
     curl \
-    vim
+    vim \
+# clean temp file to reduce docker size 
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # System deps:
 RUN curl -sSL https://install.python-poetry.org | python3 -
@@ -30,12 +32,12 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
 
 # Project initialization:
-RUN poetry install --no-interaction --no-ansi
+RUN poetry install --no-interaction --no-ansi --no-root
 
 # Creating folders, and files for a project:
 COPY . /app
 
 # RUN pip3 install -r requirements.txt
 # TODO: use variable for port number
-EXPOSE 8000
-CMD ["gunicorn"  , "--workers=1", "--bind", "0.0.0.0:8000", "--timeout", "120", "--log-level=debug", "clientApp:app"]
+EXPOSE 8001
+CMD ["gunicorn"  , "--workers=1", "--bind", "0.0.0.0:8001", "--timeout", "120", "--log-level=debug", "clientApp:app"]

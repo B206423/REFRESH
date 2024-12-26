@@ -11,6 +11,9 @@ import uuid
 
 # Load environment variables from .env
 load_dotenv()
+# Load sensitive configurations from environment variables
+llama_api_key = os.getenv("LLAMA_API_KEY")
+llama_base_url = os.getenv("LLAMA_BASE_URL")
 
 # Define the persistent directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -93,26 +96,26 @@ def get_chat_history(session_id):
       chat_history = []
       chat_histories[session_id] = chat_history
    print(f"[TRACE] get-Chat history count for session_id {session_id} is {len(chat_history)}")
-   print(f"[TRACE] get-Chat history:\n{chat_history}")
+   if chat_history:  # Check if there is any history to print
+        print(f"[TRACE] get-Chat history:\n{chat_history[-1]}")
+   else:
+        print("[TRACE] get-Chat history is empty.")
    return chat_history
 
 def build_rag_chain(model_name="gpt-4o-mini"):
 
-  # Load sensitive configurations from environment variables
-  llama_api_key = os.getenv("LLAMA_API_KEY")
-  llama_base_url = os.getenv("LLAMA_BASE_URL")
-  
   # Check if the selected model is 'gpt-4o-mini'
   if model_name=="gpt-4o-mini":
     llm = ChatOpenAI(model=model_name, temperature=0)
-  
-  # Assuming the selected model is 'llama-3.2'  
+    print(f"SG: {model_name}: base url>> N/A variable loaded with {llama_base_url}")
+  # Assuming the selected model is 'llama3.2'  
   else:
     llm = ChatOpenAI(
         api_key=llama_api_key,
-        model="llama3.2",
+        model=model_name,
         base_url=llama_base_url,
         temperature=0.5,)
+    print(f"SG: {model_name}: base url>>{llama_base_url}")
 
   # Create a history-aware retriever
   # This uses the LLM to help reformulate the question based on chat history
@@ -128,15 +131,9 @@ def build_rag_chain(model_name="gpt-4o-mini"):
   rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)   
   return rag_chain
 
-rag_chains = {}
-for model in ["gpt-4o-mini", "llama-3.2"]:
-   rag_chains[model] = build_rag_chain(model)
-
-def get_rag_chain(model_name):
-  rag_chain = rag_chains.get(model_name)
-  if rag_chain is None:
-    model_name = "gpt-4o-mini"
-    rag_chain = rag_chains[model_name]
+def get_rag_chain(model_name= "gpt-4o-mini"):
+  
+  rag_chain = build_rag_chain(model_name)
   print(f"Using rag_chain from {model_name}")
   return rag_chain
   
@@ -146,7 +143,7 @@ def q_and_a(rag_chain, session_id, question):
   chat_history.append(HumanMessage(content=question))
   chat_history.append(SystemMessage(content=result["answer"]))
   print(f"[TRACE] qa-Chat history count for session_id {session_id} is {len(chat_history)}")
-  print(f"[TRACE] qa-Chat history:\n{chat_history}")
+  print(f"[TRACE] qa-Chat history:\n{chat_history[-1]}")
   return result["answer"]
 
 # Function to simulate a continual chat
