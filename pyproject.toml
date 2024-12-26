@@ -3,7 +3,7 @@ name = "REFRESH"
 version = "1.0"
 description = "IK Capstone Project (Resume Coach)"
 authors = ["Laxman", "Subhra", "Suresh"]
-exclude = ["sagemaker/*","Archive/*","data/*","examples/*"]
+exclude = ["sagemaker/*" , "Archive/*" , "data/*" , "examples/*"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
