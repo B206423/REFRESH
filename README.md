@@ -68,8 +68,10 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 2. Run the Docker container
 
    ```bash
-   docker run --name=refresh --hostname=refresh -p 8001:8001 -e PORT=8001 -v "chromadb:/app/db/chroma_db_jobs" --rm -it refresh
+   docker run --name=refresh --hostname=refresh -p 8001:8001 -e PORT=8001 -v "chromadb:/app/db/chroma_db_jobs" --rm --network bridge -it refresh
    ```
+- note: network name bridge is for aws. for others docker create network ```docker network create bridge```
+
 
 3. Launch browser and go to http://localhost:$PORT/
 
