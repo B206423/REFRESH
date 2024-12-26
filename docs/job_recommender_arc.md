@@ -1,4 +1,4 @@
-# job_reccomender Architecture
+# job_recommender Architecture
 
 ```mermaid
 graph TB
