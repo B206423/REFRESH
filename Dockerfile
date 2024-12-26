@@ -39,5 +39,5 @@ COPY . /app
 
 # RUN pip3 install -r requirements.txt
 # TODO: use variable for port number
-EXPOSE 8001
-CMD ["gunicorn"  , "--workers=1", "--bind", "0.0.0.0:8001", "--timeout", "120", "--log-level=debug", "clientApp:app"]
+EXPOSE 8000
+CMD ["gunicorn"  , "--workers=1", "--bind", "0.0.0.0:8000", "--timeout", "120", "--log-level=debug", "clientApp:app"]
