@@ -114,7 +114,8 @@ def build_rag_chain(model_name="gpt-4o-mini"):
         api_key=llama_api_key,
         model=model_name,
         base_url=llama_base_url,
-        temperature=0.5,)
+        temperature=0.5,
+        max_tokens=131072,)
     print(f"SG: {model_name}: base url>>{llama_base_url}")
 
   # Create a history-aware retriever
