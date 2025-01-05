@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "REFRESH"
-version = "1.0"
+version = "2.2"
 description = "IK Capstone Project (Resume Coach)"
 authors = ["Laxman", "Subhra", "Suresh"]
 exclude = ["sagemaker/*" , "Archive/*" , "data/*" , "examples/*"]
