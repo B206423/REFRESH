@@ -79,11 +79,13 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 ### Ollama Setup 
 
 4. Install docker version of ollama use NVIDIA GPU
-   ```docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+   ```
+   docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
    ```
    
 5. Install llama3.2 inside ollama 
-   ```docker exec -it ollama ollama pull llama3.2
+   ```
+   docker exec -it ollama ollama pull llama3.2
    ```
 
 
