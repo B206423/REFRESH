@@ -50,15 +50,16 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 - Web: jQuery, html 
 - Vector DB: Chroma DB
 - Embedding: OpenAI
-- LLM : OpenAI gpt4o-mini Model
+- LLM : OpenAI gpt4o-mini Model  (or) Local LLM: llama3.2 on ollama 
 
 ## Setup
 ### Prerequisites
 
 - Docker
 
-### Installation
+## Installation
 
+### Application Setup
 1. Build Docker image
 
    ```bash
@@ -70,12 +71,26 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
    ```bash
    docker run --name=refresh --hostname=refresh -p 8000:8000 -e PORT=8000 -v "chromadb:/app/db/chroma_db_jobs" --rm --network bridge -it refresh
    ```
-- note: network name bridge is for aws. for others docker create network ```docker network create bridge```
+- note: network name bridge is for mutli-docker networking
 
 
 3. Launch browser and go to http://localhost:$PORT/
 
+### Ollama Setup 
+
+4. Install docker version of ollama use NVIDIA GPU
+   ```docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+   ```
+   
+5. Install llama3.2 inside ollama 
+   ```docker exec -it ollama ollama pull llama3.2
+   ```
+
+
 ## Release notes
+
+### V2.2 
+  - Added Support for using local LLM for with model llama3.2 using ollama 
 
 ### v2.1
   - UI support for changing LLM inference model (backend pending)
