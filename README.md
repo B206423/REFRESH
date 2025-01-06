@@ -59,6 +59,12 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
 ## Installation
 
+### Docket Network
+
+    ```bash
+    docker network create --driver bridge IK_Net
+    ```
+
 ### Application Setup
 1. Build Docker image
 
@@ -69,22 +75,25 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 2. Run the Docker container
 
    ```bash
-   docker run --name=refresh --hostname=refresh -p 8000:8000 -e PORT=8000 -v "chromadb:/app/db/chroma_db_jobs" --rm --network bridge -it refresh
+   docker run --name=refresh --hostname=refresh -p 8000:8000 -e PORT=8000 -v "chromadb:/app/db/chroma_db_jobs" --rm --network IK_Net -it refresh
    ```
-- note: network name bridge is for mutli-docker networking
+- note: network name IK_Net is for mutli-docker networking
 
 
 3. Launch browser and go to http://localhost:$PORT/
 
 ### Ollama Setup 
 
+
 4. Install docker version of ollama use NVIDIA GPU
-   ```
-   docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+
+   ```bash
+   docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --network IK_Net --name ollama ollama/ollama
    ```
    
 5. Install llama3.2 inside ollama 
-   ```
+
+   ```bash
    docker exec -it ollama ollama pull llama3.2
    ```
 
