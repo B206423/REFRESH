@@ -61,6 +61,7 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
 ### Docket Network
 
+- Create the docker custom network
     ```bash
     docker network create --driver bridge IK_Net
     ```
@@ -86,13 +87,11 @@ Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
 
 4. Install docker version of ollama use NVIDIA GPU
-
    ```bash
    docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --network IK_Net --name ollama ollama/ollama
    ```
    
 5. Install llama3.2 inside ollama 
-
    ```bash
    docker exec -it ollama ollama pull llama3.2
    ```
