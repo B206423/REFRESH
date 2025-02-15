@@ -4,6 +4,16 @@ Project Name: **REFRESH**
 
 Resume Evaluation, Feedback, Revision, and Enhancement Service Hub
 
+To run the demo, you can use either of the following (with caveats)
+
+https://52.24.126.62/refresh/ 
+  - machine is always running
+  - chatgpt is always running
+  - ollama will work only when the below instance is started
+ 
+http://54.81.163.166:8000/ (part of IK's cloudlabs - ik_mlsuoct23cohort_g15)
+ - requires to be started
+ - hosts both chatgpt and ollama locally
 
 ## Feature Set 
 
