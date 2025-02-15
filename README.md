@@ -56,6 +56,31 @@ http://54.81.163.166:8000/ (part of IK's cloudlabs - ik_mlsuoct23cohort_g15)
 
 ![Sequence Diagram](./docs/sequencediagram.svg)
 
+## Model Comparision 
+A comparison table between **GPT-4o-Mini** (a lightweight GPT-4o variant) and **LLaMA 3.2 3B** (a light weight model of llama 3), running locally via **Ollama** on an **NVIDIA H100 GPU on AWS**, considering aspects like performance, privacy, and accuracy:
+
+| Feature            | **GPT-4o-Mini** (Assumed Lightweight) | **LLaMA 3.2 3B** (Local via Ollama) |
+|--------------------|------------------------------------|----------------------------------|
+| **Architecture**   | Transformer (OpenAI GPT-4o line) | Transformer (Meta LLaMA 3.2)    |
+| **Model Size**    | Estimated < 10B parameters | 3B parameters |
+| **Execution** | Cloud-based (OpenAI API) | Runs locally via Ollama |
+| **Privacy** | Limited (Data sent to OpenAI servers) | High (Fully local execution) |
+| **Hardware Requirements** | Cloud-based, no local GPU needed | Requires NVIDIA H100 (or similar) |
+| **Performance on H100 GPU** | Not applicable (runs on OpenAI servers) | Optimized for local, lower VRAM usage vs larger models |
+| **Speed** | Fast (OpenAI optimized cloud inference) | Dependent on GPU (H100 provides strong performance) |
+| **Accuracy & Reasoning** | Stronger general reasoning (GPT-4o trained on more data) | Weaker than GPT-4o but strong within 3B model range |
+| **Fine-tuning Capability** | No fine-tuning (Closed model) | Can be fine-tuned locally |
+| **Latency** | Low latency in OpenAI API but depends on API load | Very low latency if properly optimized on H100 |
+| **Cost** | Pay-per-use via API | One-time hardware cost, no API fees |
+| **Use Cases** | General AI tasks, creative writing, coding | Local AI tasks, privacy-sensitive applications |
+| **Best For** | Users who prioritize ease of use, high accuracy | Users who require privacy, control, and local execution |
+
+### **Conclusion:**
+- **For privacy, control, and offline execution**, LLaMA 3.2 3B on an **H100 GPU is the best choice**.
+- **For more accurate, cloud-based solution**, GPT-4o-Mini (or regular GPT-4o) via OpenAI's API is better.
+   
+- **REFRESH application for Resume inferencing**, where both models are accessible to end users using drop-down. This allows end users to compare **answers from both models in a chat interface**. This setup helps evaluate accuracy, privacy, and response quality based on real-world use cases.  
+
 ## Technolgy Stack 
 - Web: jQuery, html 
 - Vector DB: Chroma DB
@@ -84,21 +109,24 @@ http://54.81.163.166:8000/ (part of IK's cloudlabs - ik_mlsuoct23cohort_g15)
    ```
 
 2. Run the Docker container
-
+ 
    ```bash
-   docker run --name=refresh --hostname=refresh -p 8000:8000 -e PORT=8000 -v "chromadb:/app/db/chroma_db_jobs" --rm --network IK_Net -it refresh
+   docker run --name=refresh --hostname=refresh -p 8000:8000 -e PORT=8000 -v "/home/ubuntu/repo/data:/app/db/chroma_db_jobs" -- restart always --network IK_Net --rm -it refresh
    ```
-- note: network name IK_Net is for mutli-docker networking
+
+   - Created on aws VM folder ```~/repo``` and ```~/repo/data``` 
+   - Clone of application repo created  ```~/repo/REFRESH```
+   - Chromadb copied to data ```~/repo/data/chroma.sqlite3```
 
 
-3. Launch browser and go to http://localhost:$PORT/
+3. Launch browser and go to http://aws-virtual-machine-ip-address:8000/
 
 ### Ollama Setup 
 
 
 4. Install docker version of ollama use NVIDIA GPU
    ```bash
-   docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --network IK_Net --name ollama ollama/ollama
+   docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --restart always --network IK_Net --name ollama ollama/ollama
    ```
    
 5. Install llama3.2 inside ollama 
