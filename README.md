@@ -15,6 +15,12 @@ http://54.81.163.166:8000/ (part of IK's cloudlabs - ik_mlsuoct23cohort_g15)
  - requires to be started
  - hosts both chatgpt and ollama locally
 
+
+| **Instance ID**  | Instance | Zone | Public DNS | **Public IPv4** | Security | Platform |User |
+| ---------------- |  ------------- | ------------------------ | ----------------- | -------------------------- | ------------------- | ---------- | ------------- | 
+| i-0ff3cf59a18f3c669 |  g4dn. xlarge   | us-east-1f | ec2-54-81-163-166.compute-1. amazonaws.com | 54.81.163.166 | launch-wizard-1 | Linux | arn:aws:sts:: 099288422067: federated-user/ ik_mlsuoct23cohort_g15 |
+
+
 ## Feature Set 
 
 ### 1. Preview Resume/CV
