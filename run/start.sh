@@ -3,7 +3,7 @@ docker stop refresh
 docker rm refresh
 
 #clean any ols image
-docker image prune -f
+#docker image prune -f
 
 #build application 
 docker build -t refresh .
