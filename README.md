@@ -25,9 +25,9 @@ To run the demo, you can use either of the following URLs
 
 The screenshot below shows the UI screen and gives you an idea of how to use
 
-![Screenshot](./docs/2025-02-16_14-45-06.png)
-
 ![Screenshot](./docs/2025-02-16_14-50-47.gif)
+
+![Screenshot](./docs/2025-02-16_14-45-06.png)
 
 Demo (Video Recording)
 
