@@ -21,11 +21,16 @@ To run the demo, you can use either of the following URLs
 | ---------------- |  ------------- | ------------------------ | ----------------- | -------------------------- | ------------------- | ---------- | ------------- | 
 | i-0ff3cf59a18f3c669 |  g4dn. xlarge   | us-east-1f | ec2-54-81-163-166.compute-1. amazonaws.com | 54.81.163.166 | launch-wizard-1 | Linux | arn:aws:sts:: 099288422067: federated-user/ ik_mlsuoct23cohort_g15 |
 
-### 1.2 Screenshot
+### 1.2 Screenshot & Demo
 
 The screenshot below shows the UI screen and gives you an idea of how to use
 
 ![Screenshot](./docs/screenshot.png)
+
+Demo (Video Recording)
+
+[![Watch the video](./docs/mydemo.jpeg)](https://drive.google.com/file/d/19_UFv3ONZTgd9rqNMWHpGvnV3vRGSWJZ/)
+
 
 ### 1.3 How to use
 1. Select the "Choose File" button to upload Resume. Resume can be plain text or a pdf
