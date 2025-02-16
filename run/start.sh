@@ -1,9 +1,9 @@
-#stop container if present and remove it 
-docker stop refresh
-docker rm refresh
+#!/bin/bash
 
-#clean any ols image
-#docker image prune -f
+#Always execute the default actions
+
+#stop container if present and remove it 
+docker stop refresh && docker rm refresh
 
 #build application 
 docker build -t refresh .
@@ -18,3 +18,22 @@ docker build -t refresh .
 #start the application
 docker run --name=refresh -d --hostname=refresh -p 8000:8000 -e PORT=8000 -v "/home/ubuntu/repo/data:/app/db/chroma_db_jobs" --network IK_Net --restart always -it refresh
 
+# If parameter is passed, check its value
+if [ ! -z "$1" ]; then
+    if [ "$1" -eq 1 ]; then
+        # stream Docker log file  
+        docker logs -f refresh
+
+    elif [ "$1" -eq 2 ]; then
+        # Clean any old image (if any)         
+        docker image prune -f
+
+    elif [ "$1" -eq 3 ]; then
+        # Docker clean and Log Stream both
+        docker image prune
+        docker logs -f refresh
+
+    else
+        echo "Invalid parameter. Please provide 1, 2, or 3."
+    fi
+fi
