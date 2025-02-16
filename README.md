@@ -249,7 +249,7 @@ See Installation section below
    docker exec -it ollama ollama pull llama3.2
    ```
 
-## 6. Release notes
+## 5. Release notes
 
 ### V2.2 
   - Added Support for using local LLM for with model llama3.2 using ollama 
