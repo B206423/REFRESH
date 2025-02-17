@@ -7,8 +7,9 @@ docker stop refresh && docker rm refresh
 
 #build application 
 if [ ! -z "$1" ]; then
-   elif [ "$1" -eq 3 ]; then
+   if [ "$1" -eq 3 ]; then
        docker build  --no-cache -t refresh .
+   fi
 else 
     docker build -t refresh .
 fi
