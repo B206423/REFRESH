@@ -28,6 +28,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 
 # Copy only requirements to cache them in docker layer
 WORKDIR /app
+RUN echo $(date +%s) > /app/.rebuild_trigger
 COPY poetry.lock pyproject.toml /app/
 
 # Project initialization:
