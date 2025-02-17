@@ -16,12 +16,19 @@ ENV PYTHONFAULTHANDLER=1 \
 # System deps (we don't use exact versions because it is hard to update them,
 # pin when needed):
 # hadolint ignore=DL3008
-RUN apt-get update && apt-get upgrade -y \
-  && apt-get install --no-install-recommends -y \
-    bash \
-    curl \
-    vim \
-# clean temp file to reduce docker size 
+# RUN apt-get update && apt-get upgrade -y \
+#   && apt-get install --no-install-recommends -y \
+#     bash \
+#     curl \
+#     vim \
+# # clean temp file to reduce docker size 
+#     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+       bash \
+       curl \
+       vim-tiny \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # System deps:

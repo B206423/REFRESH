@@ -6,7 +6,7 @@
 docker stop refresh && docker rm refresh
 
 #build application 
-docker build -t refresh .
+docker build --no-cache -t refresh .
 
 # Make sure chorma db (chroma.sqlite3) is in folder ~/repo/data (Example below)
 #ubuntu@ip-172-31-64-248:~/repo/data$ ls -la
