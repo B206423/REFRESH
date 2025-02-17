@@ -97,7 +97,7 @@ High-level [architecture diagram](docs/REFRESH_HighLevelArc.md#project-architect
 ### 3.2 Model and Hyperparameter Fine Tuning
 
   - Model Temperature: During the job recommendation retrieval process, we used a model temperature of 0 for consistent results. When we changed the temperature, we observed the job recommendations to be inconsistent.
-  - TODO: Similarity Search
+  - Similarity Search: Performed a vector similarity search to find job postings most relevant to the processed resume, returning both matched documents and their similarity scores.
 
 #### 3.2.1 Model selection
 
