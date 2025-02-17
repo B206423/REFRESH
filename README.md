@@ -25,9 +25,9 @@ To run the demo, you can use either of the following URLs
 
 The screenshot below shows the UI screen and gives you an idea of how to use
 
-![Screenshot](./docs/2025-02-16_18-59-50.gif)
+![Screenshot](./docs/2025-02-16_22-25-42.gif)
 
-![Screenshot](./docs/2025-02-16_18-54-44.png)
+![Screenshot](./docs/2025-02-16_23-09-29.png)
 
 Demo (Video Recording)
 
@@ -97,7 +97,7 @@ High-level [architecture diagram](docs/REFRESH_HighLevelArc.md#project-architect
 ### 3.2 Model and Hyperparameter Fine Tuning
 
   - Model Temperature: During the job recommendation retrieval process, we used a model temperature of 0 for consistent results. When we changed the temperature, we observed the job recommendations to be inconsistent.
-  - TODO: Similarity Search
+  - Similarity Search: Performed a vector similarity search to find job postings most relevant to the processed resume, returning both matched documents and their similarity scores.
 
 #### 3.2.1 Model selection
 
