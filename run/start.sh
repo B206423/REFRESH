@@ -6,8 +6,12 @@
 docker stop refresh && docker rm refresh
 
 #build application 
-docker build -t refresh .
-
+if [ ! -z "$1" ]; then
+   elif [ "$1" -eq 3 ]; then
+       docker build  --no-cache -t refresh .
+else 
+    docker build -t refresh .
+fi
 # Make sure chorma db (chroma.sqlite3) is in folder ~/repo/data (Example below)
 #ubuntu@ip-172-31-64-248:~/repo/data$ ls -la
 #total 4170608
@@ -29,7 +33,7 @@ if [ ! -z "$1" ]; then
         docker image prune -f
 
     elif [ "$1" -eq 3 ]; then
-        # Docker clean and Log Stream both
+        # Docker clean, full rebuild and Log Stream both
         docker image prune
         docker logs -f refresh
 
