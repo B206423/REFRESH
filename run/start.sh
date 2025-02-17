@@ -8,16 +8,14 @@ docker stop refresh && docker rm refresh || echo "Failed to stop/remove containe
 #build application 
 
 # Check if the first argument is provided
-if [ -n "$1" ]; then
-   if [ "$1" -eq 3 ]; then
-       echo "Pruning unused Docker images..."
-       docker image prune -f
-       echo "Rebuilding Docker image without cache..."
-       docker build -f /home/ubuntu/repo/REFRESH/Dockerfile --no-cache -t refresh .
-   fi
+if [ -n "$1" ] && [ "$1" -eq 3 ]; then
+    echo "Pruning unused Docker images..."
+    docker image prune -f
+    echo "Rebuilding Docker image without cache..."
+    docker build -f $HOME/repo/REFRESH/Dockerfile --no-cache -t refresh .
 else 
     echo "Building Docker image..."
-    docker build -f /home/ubuntu/repo/REFRESH/Dockerfile -t refresh .
+    docker build -f $HOME/repo/REFRESH/Dockerfile -t refresh .
 fi
 
 # Make sure chorma db (chroma.sqlite3) is in folder ~/repo/data (Example below)
@@ -28,7 +26,7 @@ fi
 #-rw-rw-r-- 1 ubuntu ubuntu 4270686208 Dec 13 20:30 chroma.sqlite3
 
 #start the application
-docker run --name=refresh -d --hostname=refresh -p 8000:8000 -e PORT=8000 -v "/home/ubuntu/repo/data:/app/db/chroma_db_jobs" --network IK_Net --restart always -it refresh
+docker run --name=refresh -d --hostname=refresh -p 8000:8000 -e PORT=8000 -v "$HOME/repo/data:/app/db/chroma_db_jobs" --network IK_Net --restart always -it refresh
 
 # If parameter is passed, check its value
 # Handle optional parameters
