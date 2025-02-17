@@ -1,13 +1,17 @@
+/* Body and General Styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
     color: #343a40;
+    margin: 0;
+    padding: 0; 
 }
 
+/* Title Container */
 .title-container {
     text-align: center;
-    padding: 20px;
-    border-radius: 15px;
+    padding: 10px;
+    border-radius: 10px;
     background: white;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     position: relative;
@@ -22,9 +26,17 @@ body {
 #previewBtn,
 #chatBtn,
 #reportBtn {
-    position: relative;
+  position: relative;
+  transition: opacity 0.3s ease-in-out;
 }
 
+#previewBtn:hover,
+#chatBtn:hover,
+#reportBtn:hover {
+  opacity: 0.8;
+}
+
+/* Spinner Styles */
 .spinner {
     position: absolute;
     top: 50%;
@@ -33,16 +45,17 @@ body {
     z-index: 1000;
 }
 
-.spinner-border {
-    display: inline-block;
-    width: 2rem;
-    height: 2rem;
-    vertical-align: -0.125em;
-    border-radius: 50%;
-    border-width: 0.25em;
-    border-style: solid;
-    border-color: #f3e80a transparent #f3e80a transparent;
-    animation: spinner-border 1.75s linear infinite;
+.spinner-border,
+.spinner-border[role="status"] {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  vertical-align: -0.125em;
+  border-radius: 50%;
+  border-width: 0.25em;
+  border-style: solid;
+  border-color: #f3e80a transparent #f3e80a transparent;
+  animation: spinner-border 1.75s linear infinite;
 }
 
 .spinner-border-sm {
@@ -60,19 +73,6 @@ body {
     }
 }
 
-.spinner-border[role="status"] {
-    position: relative;
-    display: inline-block;
-    width: 2rem;
-    height: 2rem;
-    vertical-align: -0.125em;
-    border-radius: 50%;
-    border-width: 0.25em;
-    border-style: solid;
-    border-color: #f3e80a transparent #f3e80a transparent;
-    animation: spinner-border 1.75s linear infinite;
-}
-
 .sr-only {
     position: absolute;
     width: 1px;
@@ -85,8 +85,7 @@ body {
     border: 0;
 }
 
-.sr-only.focusable:active,
-.sr-only.focusable:focus {
+.sr-only.focusable:active {
     clip: auto;
     height: auto;
     margin: 0;
@@ -95,6 +94,16 @@ body {
     white-space: normal;
     width: auto;
 }
+
+.sr-only.focusable:focus {
+    position: absolute;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip: auto;
+    overflow: visible;
+    white-space: normal;
+  }
 
 .title-container::before {
     content: '';
@@ -120,12 +129,13 @@ body {
 
 .container {
     max-width: 95%;
-    margin: 0 auto;
-    padding: 20px;
+    margin: 10px auto;
+    padding: 10px;
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
+
 
 h1 {
     margin-bottom: 20px;
@@ -137,35 +147,11 @@ h1 span {
     display: inline-block;
     color: #3b82f6;
     animation: bounce 2s infinite;
-}
-
-h1 span:nth-child(1) {
-    animation-delay: 0s;
-}
-
-h1 span:nth-child(2) {
-    animation-delay: 0.1s;
-}
-
-h1 span:nth-child(3) {
-    animation-delay: 0.2s;
-}
-
-h1 span:nth-child(4) {
-    animation-delay: 0.3s;
-}
-
-h1 span:nth-child(5) {
-    animation-delay: 0.4s;
-}
-
-h1 span:nth-child(6) {
-    animation-delay: 0.5s;
-}
-
-h1 span:nth-child(7) {
-    animation-delay: 0.6s;
-}
+  }
+  
+  h1 span:nth-child(n) {
+    animation-delay: calc(n * 0.1s);
+  }
 
 @keyframes bounce {
     0%,
@@ -244,29 +230,42 @@ p {
     padding: 15px;
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 800px; /* Increased height */
+    display: flex;
+    flex-direction: column;
 }
 
 .chat-messages {
-    max-height: 300px;
+    flex-grow: 1;
+    max-height: 750px;
     overflow-y: auto;
-    margin-bottom: 15px;
-}
+    scroll-behavior: smooth;
+    padding-right: 8px; /* Prevent text overlap with scrollbar */
+  }
 
 .chat-message {
     font-size: 12px; /* Adjust the font size as needed */
-    padding: 10px;
+    padding: 5px 25px;
     border-radius: 10px;
-    display: inline-block;
-    max-width: 80%;
     margin-bottom: 10px;
+    max-width: 85%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow */
 }
 
 .chat-message.user {
     text-align: right;
     background-color: #e0f7fa; /* Light cyan background */
+    margin-right: auto; /* Align bot messages to left */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
 }
 
 .chat-message.bot {
     text-align: left;
     background-color: #f1f1f1; /* Light grey background */
+    margin-left: auto; /* Align user messages to right */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.12);
 }
+
+.input-group {
+    margin-top: auto; /* Ensures the input always sticks to the bottom */
+  }
