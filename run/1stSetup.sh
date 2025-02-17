@@ -22,6 +22,6 @@ docker network create --driver bridge IK_Net
 docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --restart always --network IK_Net --name ollama ollama/ollama
 
 #download the model
-docker exec -it ollama ollama run llama3.2
+docker exec -it ollama ollama pull llama3.2
 
 
