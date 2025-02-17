@@ -27,7 +27,7 @@ The screenshot below shows the UI screen and gives you an idea of how to use
 
 ![Screenshot](./docs/2025-02-16_22-25-42.gif)
 
-![Screenshot](./docs/2025-02-16_23-09-29.png)
+![Screenshot](./docs/2025-02-17_01-16-26.png)
 
 Demo (Video Recording)
 
