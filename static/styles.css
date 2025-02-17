@@ -253,13 +253,20 @@ p {
 }
 
 .chat-message {
+    font-size: 12px; /* Adjust the font size as needed */
+    padding: 10px;
+    border-radius: 10px;
+    display: inline-block;
+    max-width: 80%;
     margin-bottom: 10px;
 }
 
 .chat-message.user {
     text-align: right;
+    background-color: #e0f7fa; /* Light cyan background */
 }
 
 .chat-message.bot {
     text-align: left;
+    background-color: #f1f1f1; /* Light grey background */
 }

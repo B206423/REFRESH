@@ -24,7 +24,7 @@ $(document).ready(function() {
                 var resume_file_content = marked.parse(response.resume_file_content);
                 var jd_file_content = marked.parse(response.jd_file_content);
 
-                //Store the contents in the browser's local storage to be used later
+                // Store the contents in the browser's local storage to be used later
                 $('#nav-resume').html(resume_file_content);
                 $('#nav-jd').html(jd_file_content);
                 localStorage.setItem('resume_file_content', resume_file_content);
@@ -42,8 +42,8 @@ $(document).ready(function() {
     $('#reportBtn').click(function() {
         buttonDisable($("#previewBtn"));
         spinnerEnable($("#spinnerReport"));
-        //TODO: instead of storing in client, store this in the backend's DB with key as session_id, 
-        //      similar to chat_history
+        // TODO: instead of storing in client, store this in the backend's DB with key as session_id, 
+        //       similar to chat_history
         var resume_file_content = localStorage.getItem('resume_file_content');
         var jd_file_content = localStorage.getItem('jd_file_content');
 
@@ -70,7 +70,7 @@ $(document).ready(function() {
 
                     var jobs_recommendations_report = response.jobs_reports;
 
-                    $('#relatedJob').html("")
+                    $('#relatedJob').html("");
                     jobs_recommendations_report.forEach((result, index) => {
                         // Create tab
                         const tabId = `tab-${index}`;
@@ -129,6 +129,14 @@ $(document).ready(function() {
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ message: message, session_id: localStorage.getItem('session_id'), model_name: $('#modelDropdown').val() }),
+                xhrFields: {
+                    onprogress: function(e) {
+                        var response = e.currentTarget.response;
+                        var partialMessage = response.substring(lastIndex);
+                        lastIndex = response.length;
+                        addMessage('bot', partialMessage, true);
+                    }
+                },
                 success: function(response) {
                     spinnerDisable($("#spinnerChat"));
                     addMessage('bot', response.reply);
@@ -148,16 +156,28 @@ $(document).ready(function() {
     $('#chatInput').keypress(function(event) {
         if (event.which === 13) { // Enter key pressed
             event.preventDefault(); // Prevent the default form submission
-            //dont sendMessage() if chat is disabled 
+            // Don't sendMessage() if chat is disabled 
             if (!$("#chatBtn").prop("disabled")) {
                 sendMessage();
             }
         }
     });
 
-    function addMessage(sender, message) {
+    function addMessage(sender, message, isPartial = false) {
+        // Convert message from markdown to html for better webpage view 
+        message = marked.parse(message);
+
         var messageClass = sender === 'user' ? 'chat-message user' : 'chat-message bot';
-        $('#chatMessages').append('<div class="' + messageClass + '">' + message + '</div>');
+        if (isPartial) {
+            var lastMessage = $('#chatMessages').children().last();
+            if (lastMessage.hasClass('bot')) {
+                lastMessage.append(message);
+            } else {
+                $('#chatMessages').append('<div class="' + messageClass + '">' + message + '</div>');
+            }
+        } else {
+            $('#chatMessages').append('<div class="' + messageClass + '">' + message + '</div>');
+        }
         $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
     }
 });
