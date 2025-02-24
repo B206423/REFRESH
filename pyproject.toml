@@ -1,4 +1,5 @@
 [tool.poetry]
+<<<<<<< HEAD
 name = "REFRESH"
 version = "2.2"
 description = "IK Capstone Project (Resume Coach)"
@@ -38,3 +39,26 @@ ignore = ['W291', 'W292', 'W293']
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api" 
+=======
+name = "pnvkmchat"
+version = "0.1.0"
+description = ""
+authors = ["Subhra <b206423@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+langchain = "^0.1.4"
+langchain-community = "^0.0.16"
+langchain-core = "^0.1.17"
+langchain-openai = "^0.0.5"
+python-dotenv = "^1.0.1"
+streamlit = "^1.30.0"
+chromadb = "^0.3.29"
+beautifulsoup4 = "^4.12.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+>>>>>>> 0da8775399f84453a037b226755bc42e9eb84190
