@@ -69,7 +69,7 @@ Demo (Video Recording)
     8. Overall Customization
 
 ### 2.4 Job Compatibility Report
-  - Provide an overall compatibity score of the Resume with the Job Description
+  - Provide an overall compatibility score of the Resume with the Job Description
   - Provide specific feedback on the following with respect to how well they match, relevant strengths in the resume and suggest improvements if necessary
     1. Hard Skills
     2. Soft Skills
